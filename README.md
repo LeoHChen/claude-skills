@@ -8,6 +8,7 @@ the `Skill` tool when working with Claude Code.
 | Skill | What it does |
 | --- | --- |
 | [`build-deck`](build-deck/) | Build a themed website-rendered slide deck from a `content.md` YAML stream. Theme switcher (Terracotta / Carbon / Berry / Lab), Export-PDF button, slide types: `title`, `architecture`, `cards`, `flow`, `roadmap`, `questions`. |
+| [`write-doc`](write-doc/) | Write a Markdown document and render it to a themed PDF via `make pdf DOC=<name> [THEME=<theme>]`. Same four themes as `build-deck`, tuned for print. Pandoc + headless Chromium pipeline (no LaTeX). |
 
 ## Install on a new machine
 

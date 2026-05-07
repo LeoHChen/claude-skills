@@ -1,0 +1,56 @@
+/* Berry — cream page + deep berry serif headers + dusty rose accents. Elegant, formal. */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,700;9..144,800&family=JetBrains+Mono:wght@400;500&display=swap');
+
+@page { size: Letter; margin: 0.75in 0.85in; }
+html { font-size: 10.5pt; }
+body { font-family: "Inter", system-ui, sans-serif; color: #2A1622; line-height: 1.55; max-width: none; margin: 0; background: #FAF5EE; }
+
+h1 {
+  font-family: "Fraunces", Georgia, serif; font-weight: 800;
+  font-size: 26pt; line-height: 1.1; letter-spacing: -0.01em;
+  margin: 0 0 6pt; page-break-after: avoid;
+  border-bottom: 2px solid #6D2E46; padding-bottom: 6pt;
+}
+h2 {
+  font-family: "Fraunces", Georgia, serif; font-weight: 800;
+  font-size: 17pt; line-height: 1.2;
+  margin-top: 20pt; margin-bottom: 8pt; color: #2A1622; page-break-after: avoid;
+}
+h3 {
+  font-family: "Inter", sans-serif; font-weight: 700;
+  font-size: 12pt; margin-top: 14pt; margin-bottom: 4pt;
+  color: #6D2E46; page-break-after: avoid;
+}
+h4 { font-weight: 700; font-size: 10.5pt; margin: 10pt 0 3pt; color: #2A1622; }
+
+p { margin: 0 0 8pt; }
+ul, ol { margin: 4pt 0 10pt; padding-left: 22pt; }
+li { margin-bottom: 2pt; }
+strong { color: #2A1622; }
+em { color: #6F4C5C; }
+
+blockquote {
+  border-left: 3px solid #C97064; background: #ECE2D0;
+  padding: 10pt 14pt; margin: 10pt 0; color: #6F4C5C; font-size: 9.5pt;
+}
+blockquote p { margin: 0 0 4pt; } blockquote p:last-child { margin: 0; }
+
+code, pre { font-family: "JetBrains Mono", ui-monospace, monospace; }
+code { background: #ECE2D0; padding: 1pt 4pt; border-radius: 3pt; font-size: 0.92em; color: #2A1622; }
+pre {
+  background: #2A1622; color: #ECE2D0; padding: 12pt 14pt; border-radius: 6pt;
+  font-size: 8.5pt; line-height: 1.45; overflow: visible; white-space: pre; page-break-inside: avoid;
+}
+pre code { background: transparent; padding: 0; color: inherit; }
+
+hr { border: none; border-top: 1px solid #D8C9B5; margin: 16pt 0; }
+
+table { border-collapse: collapse; width: 100%; font-size: 9pt; margin: 8pt 0 12pt; page-break-inside: avoid; }
+th, td { border: 1px solid #D8C9B5; padding: 6pt 8pt; text-align: left; vertical-align: top; }
+th { background: #ECE2D0; font-weight: 700; color: #2A1622; font-family: "Inter", sans-serif; }
+tr:nth-child(even) td { background: #F0E5DA; }
+
+a { color: #6D2E46; text-decoration: none; }
+table p { margin: 0; } table ul { margin: 0; padding-left: 14pt; }
+
+* { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
