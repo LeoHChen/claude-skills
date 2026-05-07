@@ -1,0 +1,583 @@
+<!doctype html>
+<html lang="en" data-theme="terracotta">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1320, initial-scale=1">
+<title>Deck Title</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@500;700&family=Fraunces:opsz,wght@9..144,700;9..144,800;9..144,900&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/js-yaml@4.1.0/dist/js-yaml.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/dompurify@3.1.6/dist/purify.min.js"></script>
+<style>
+:root {
+  --header-font: "Space Grotesk", system-ui, sans-serif;
+  --serif-font:  "Fraunces", Georgia, serif;
+  --body-font:   "Inter", system-ui, sans-serif;
+  --mono-font:   "JetBrains Mono", ui-monospace, monospace;
+  --radius: 14px;
+  --transition: 280ms cubic-bezier(.2,.7,.2,1);
+}
+
+[data-theme="terracotta"] {
+  --bg:#FBF5EC; --bg-soft:#F4EAD9; --card:#FFFFFF; --card-accent:#F4EAD9;
+  --primary:#B85042; --primary-soft:rgba(184,80,66,.10);
+  --accent:#2C5F2D;  --accent-soft:rgba(44,95,45,.10);
+  --text:#1F1814; --text-muted:#6B5A4F; --text-subtle:#A99887;
+  --divider:rgba(31,24,20,.10);
+  --shadow:0 1px 2px rgba(31,24,20,.04), 0 12px 32px -12px rgba(31,24,20,.18);
+  --display-font:var(--serif-font);
+}
+[data-theme="terracotta"] {
+  --bg:#0E0E10; --bg-soft:#181819; --card:#18181A; --card-accent:#232325;
+  --primary:#B6FF5C; --primary-soft:rgba(182,255,92,.12);
+  --accent:#FF7B47;  --accent-soft:rgba(255,123,71,.14);
+  --text:#F2F2F2; --text-muted:#A4A4A6; --text-subtle:#6B6B6E;
+  --divider:rgba(255,255,255,.08);
+  --shadow:0 0 0 1px rgba(255,255,255,.04), 0 24px 60px -20px rgba(0,0,0,.6);
+  --display-font:var(--header-font);
+}
+[data-theme="berry"] {
+  --bg:#FAF5EE; --bg-soft:#F0E5DA; --card:#FFFFFF; --card-accent:#ECE2D0;
+  --primary:#6D2E46; --primary-soft:rgba(109,46,70,.10);
+  --accent:#C97064;  --accent-soft:rgba(201,112,100,.14);
+  --text:#2A1622; --text-muted:#6F4C5C; --text-subtle:#A78A93;
+  --divider:rgba(42,22,34,.10);
+  --shadow:0 1px 2px rgba(42,22,34,.04), 0 14px 30px -14px rgba(42,22,34,.20);
+  --display-font:var(--serif-font);
+}
+[data-theme="lab"] {
+  --bg:#F7F7F8; --bg-soft:#EFEFF1; --card:#FFFFFF; --card-accent:#F1F1F3;
+  --primary:#FF2D6B; --primary-soft:rgba(255,45,107,.10);
+  --accent:#00B89C;  --accent-soft:rgba(0,184,156,.14);
+  --text:#0A0A0B; --text-muted:#555558; --text-subtle:#999;
+  --divider:rgba(0,0,0,.08);
+  --shadow:0 1px 0 rgba(0,0,0,.04), 0 18px 40px -18px rgba(0,0,0,.18);
+  --display-font:var(--header-font);
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--body-font);
+  font-feature-settings: "ss01","ss02";
+  transition: background var(--transition), color var(--transition);
+}
+
+.topbar {
+  position: sticky; top: 0; z-index: 10;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 28px;
+  background: color-mix(in srgb, var(--bg) 85%, transparent);
+  backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--divider);
+}
+.topbar__title { font-family: var(--header-font); font-weight: 700; font-size: 14px; letter-spacing: .04em; color: var(--text); }
+.topbar__title em { color: var(--text-subtle); font-style: normal; font-weight: 400; margin-left: 8px; }
+.topbar__themes { display: flex; gap: 6px; }
+.theme-btn {
+  font: 600 11px var(--header-font); letter-spacing: .08em; text-transform: uppercase;
+  padding: 8px 14px; border-radius: 999px;
+  border: 1px solid var(--divider); background: transparent; color: var(--text-muted);
+  cursor: pointer; transition: all 160ms ease;
+}
+.theme-btn:hover { color: var(--text); border-color: var(--text-subtle); }
+.theme-btn[aria-pressed="true"] { background: var(--text); color: var(--bg); border-color: var(--text); }
+.topbar__sep { width: 1px; height: 22px; background: var(--divider); margin: 0 6px; }
+.action-btn {
+  font: 600 11px var(--header-font); letter-spacing: .08em; text-transform: uppercase;
+  padding: 8px 14px; border-radius: 999px;
+  border: 1px solid var(--primary); background: var(--primary); color: var(--bg);
+  cursor: pointer; transition: all 160ms ease;
+}
+.action-btn:hover { opacity: .88; }
+.action-btn:active { transform: translateY(1px); }
+
+.deck { padding: 32px 28px 80px; display: flex; flex-direction: column; gap: 32px; align-items: center; }
+.slide {
+  width: 100%; max-width: 1280px; aspect-ratio: 16 / 9;
+  background: var(--bg);
+  border: 1px solid var(--divider); border-radius: var(--radius);
+  position: relative; overflow: hidden;
+  padding: 56px 64px;
+  box-shadow: var(--shadow);
+  transition: background var(--transition), border-color var(--transition);
+}
+.slide::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 6px; background: var(--primary); }
+.slide__tag { font: 700 11px/1 var(--header-font); letter-spacing: .28em; text-transform: uppercase; color: var(--primary); }
+.slide__title {
+  font-family: var(--display-font); font-weight: 800;
+  font-size: clamp(34px, 4vw, 50px); line-height: 1.05;
+  letter-spacing: -0.01em; margin: 14px 0 14px; color: var(--text);
+}
+.slide__subtitle { font-size: 17px; line-height: 1.5; color: var(--text-muted); max-width: 1020px; font-style: italic; }
+
+.title-slide__main {
+  font-family: var(--display-font); font-weight: 900;
+  font-size: clamp(96px, 11vw, 152px); letter-spacing: 0.04em; line-height: 0.95;
+  margin: 14px 0 18px; color: var(--text);
+}
+[data-theme="terracotta"] .title-slide__main,
+[data-theme="berry"]      .title-slide__main { letter-spacing: 0; }
+.title-slide__sub {
+  font-family: var(--header-font); font-weight: 600;
+  font-size: clamp(24px, 2.4vw, 30px); color: var(--primary); line-height: 1.25; margin: 0 0 16px;
+}
+.title-slide__vision {
+  font-size: 18px; line-height: 1.55; color: var(--text-muted);
+  font-style: italic; max-width: 980px; margin: 0;
+}
+.title-slide__pillars {
+  position: absolute; left: 64px; right: 64px; bottom: 64px;
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;
+}
+.pillar {
+  background: var(--card); border: 1px solid var(--divider); border-top: 3px solid var(--primary);
+  border-radius: 8px; padding: 22px 22px 24px;
+}
+.pillar__num { font: 700 11px var(--mono-font); letter-spacing: .22em; color: var(--primary); }
+.pillar__title { font-family: var(--header-font); font-weight: 700; font-size: 21px; color: var(--text); margin: 6px 0 10px; }
+.pillar__desc { font-size: 13.5px; line-height: 1.5; color: var(--text-muted); }
+.title-slide__footer {
+  position: absolute; left: 64px; bottom: 24px;
+  font: 500 11px var(--mono-font); color: var(--text-subtle); letter-spacing: .08em;
+}
+
+.arch-grid {
+  position: absolute; left: 64px; right: 64px; bottom: 56px; top: 220px;
+  display: grid; grid-template-columns: 1fr 1fr; gap: 24px;
+}
+.arch-card {
+  background: var(--card); border: 1px solid var(--divider);
+  border-radius: 10px; padding: 26px 28px 28px;
+  position: relative; display: flex; flex-direction: column;
+}
+.arch-card::before {
+  content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 4px;
+  border-top-left-radius: 10px; border-bottom-left-radius: 10px;
+  background: var(--accent-bar, var(--primary));
+}
+.arch-card[data-accent="accent"] { --accent-bar: var(--accent); }
+.arch-card[data-accent="accent"] .arch-card__tag { color: var(--accent); }
+.arch-card__tag { font: 700 10.5px var(--header-font); letter-spacing: .22em; text-transform: uppercase; color: var(--primary); }
+.arch-card__title { font-family: var(--header-font); font-weight: 700; font-size: 25px; line-height: 1.15; color: var(--text); margin: 8px 0 18px; }
+.arch-card__label { font: 700 9.5px var(--header-font); letter-spacing: .22em; text-transform: uppercase; color: var(--text-subtle); margin-top: 6px; }
+.arch-card__text { font-size: 13.5px; line-height: 1.55; color: var(--text-muted); margin: 6px 0 12px; }
+.arch-card__divider { height: 1px; background: var(--divider); margin: 4px 0 10px; }
+.arch-card__challenge-label { font: 700 9.5px var(--header-font); letter-spacing: .22em; text-transform: uppercase; color: var(--accent-bar, var(--primary)); }
+.arch-card__challenge { font-size: 13.5px; line-height: 1.55; color: var(--text); font-weight: 500; margin: 6px 0 0; }
+
+.cards-wrap {
+  position: absolute; left: 64px; right: 64px; bottom: 56px; top: 220px;
+  display: flex; flex-direction: column;
+}
+.cards-grid { display: grid; grid-template-columns: repeat(var(--cols, 3), 1fr); gap: 18px; flex: 1; }
+.cards-grid[data-dense="true"] { gap: 12px; }
+.c-card {
+  background: var(--card); border: 1px solid var(--divider);
+  border-top: 3px solid var(--primary);
+  border-radius: 10px; padding: 22px 22px 24px;
+  display: flex; flex-direction: column;
+}
+.c-card[data-accent="accent"] { border-top-color: var(--accent); }
+.c-card__num { font: 700 11px var(--mono-font); letter-spacing: .22em; color: var(--primary); }
+.c-card[data-accent="accent"] .c-card__num { color: var(--accent); }
+.c-card__title { font-family: var(--header-font); font-weight: 700; font-size: 19px; color: var(--text); margin: 8px 0 6px; line-height: 1.25; }
+.c-card__role { font: 600 10.5px var(--header-font); color: var(--text-subtle); letter-spacing: .04em; margin: 0 0 10px; }
+.c-card__body { font-size: 13px; line-height: 1.55; color: var(--text-muted); }
+.cards-grid[data-dense="true"] .c-card { padding: 18px; }
+.cards-grid[data-dense="true"] .c-card__title { font-size: 17px; margin-top: 6px; }
+.cards-grid[data-dense="true"] .c-card__body { font-size: 12.5px; }
+.cards-footer { margin-top: 16px; font-size: 12.5px; line-height: 1.55; color: var(--text-subtle); }
+.cards-footer--emphasis {
+  color: var(--text);
+  background: var(--accent-soft);
+  border-left: 3px solid var(--accent);
+  padding: 12px 16px; border-radius: 6px; font-style: normal;
+}
+
+/* ===== QUESTIONS ===== */
+.questions-meta { display: flex; align-items: center; gap: 12px; margin-top: 8px; }
+.questions-note {
+  display: inline-block;
+  background: var(--accent-soft); color: var(--accent);
+  font: 600 10.5px var(--header-font); letter-spacing: .14em; text-transform: uppercase;
+  padding: 6px 12px; border-radius: 999px;
+}
+.questions-grid {
+  position: absolute; left: 64px; right: 64px; bottom: 56px; top: 230px;
+  display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: 1fr 1fr; gap: 14px;
+}
+.q-card {
+  background: var(--card); border: 1px solid var(--divider);
+  border-radius: 10px; padding: 20px 22px 22px;
+  position: relative; display: flex; flex-direction: column;
+}
+.q-card__num {
+  position: absolute; top: 18px; right: 22px;
+  font-family: var(--display-font); font-weight: 800; font-size: 36px; line-height: 1;
+  color: var(--primary-soft); letter-spacing: -0.02em;
+}
+[data-theme="carbon"] .q-card__num { color: var(--primary); opacity: .25; }
+.q-card__badge {
+  font: 700 10px var(--mono-font); letter-spacing: .18em;
+  color: var(--primary); background: var(--primary-soft);
+  padding: 5px 9px; border-radius: 999px; align-self: flex-start;
+}
+.q-card__headline {
+  font-family: var(--header-font); font-weight: 700;
+  font-size: 16px; line-height: 1.3; color: var(--text);
+  margin: 12px 0 8px; padding-right: 36px;
+}
+.q-card__body { font-size: 13px; line-height: 1.5; color: var(--text-muted); }
+
+.flow {
+  position: absolute; left: 64px; right: 64px; top: 220px; bottom: 60px;
+  display: flex; flex-direction: column;
+}
+.flow__circles {
+  position: relative;
+  display: grid; grid-template-columns: repeat(var(--n, 5), 1fr);
+  align-items: center; justify-items: center;
+  height: 84px; margin-bottom: 16px;
+}
+.flow__circles::before {
+  content: ""; position: absolute;
+  left: calc(100% / var(--n, 5) / 2);
+  right: calc(100% / var(--n, 5) / 2);
+  top: 50%;
+  border-top: 2px dashed var(--divider);
+}
+.flow__circle {
+  width: 64px; height: 64px;
+  border-radius: 50%;
+  background: var(--card); border: 2px solid var(--primary);
+  color: var(--primary);
+  font-family: var(--display-font); font-weight: 800; font-size: 28px;
+  display: flex; align-items: center; justify-content: center;
+  position: relative; z-index: 1;
+}
+.flow__cards { display: grid; grid-template-columns: repeat(var(--n, 5), 1fr); gap: 12px; flex: 1; }
+.flow__card {
+  background: var(--card); border: 1px solid var(--divider);
+  border-top: 3px solid var(--primary);
+  border-radius: 10px; padding: 18px;
+  display: flex; flex-direction: column;
+}
+.flow__name { font-family: var(--header-font); font-weight: 700; font-size: 17px; color: var(--text); margin: 0 0 8px; line-height: 1.2; }
+.flow__desc { font-size: 12.5px; line-height: 1.5; color: var(--text-muted); flex: 1; }
+.flow__tag {
+  display: inline-block; align-self: flex-start;
+  margin-top: 10px;
+  background: var(--primary-soft); color: var(--primary);
+  font: 700 9.5px var(--header-font); letter-spacing: .18em; text-transform: uppercase;
+  padding: 4px 9px; border-radius: 4px;
+}
+.flow-footer { position: absolute; left: 64px; right: 64px; bottom: 28px; font: italic 11.5px var(--body-font); color: var(--text-subtle); }
+
+.roadmap-grid {
+  position: absolute; left: 64px; right: 64px; top: 200px; bottom: 116px;
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;
+}
+.phase {
+  background: var(--card); border: 1px solid var(--divider);
+  border-top: 3px solid var(--primary); border-radius: 10px;
+  padding: 22px; display: flex; flex-direction: column;
+}
+.phase__top { display: flex; align-items: center; justify-content: space-between; }
+.phase__date { font: 700 11px var(--header-font); letter-spacing: .22em; text-transform: uppercase; color: var(--primary); }
+.phase__num { font: 700 10px var(--mono-font); letter-spacing: .18em; color: var(--text-subtle); }
+.phase__badge {
+  display: inline-block; margin-top: 10px;
+  font: 700 10px var(--header-font); letter-spacing: .18em;
+  background: var(--primary); color: var(--bg);
+  padding: 5px 10px; border-radius: 4px; align-self: flex-start;
+}
+.phase__title { font-family: var(--display-font); font-weight: 800; font-size: 24px; line-height: 1.1; color: var(--text); margin: 14px 0 12px; }
+.phase__divider { height: 1px; background: var(--divider); margin: 0 0 12px; }
+.phase__label { font: 700 9px var(--header-font); letter-spacing: .22em; text-transform: uppercase; color: var(--primary); margin-top: 4px; }
+.phase__text { font-size: 12.5px; line-height: 1.5; color: var(--text-muted); margin: 4px 0 10px; }
+.phase__deps {
+  margin-top: auto;
+  background: var(--accent-soft);
+  border-left: 3px solid var(--accent);
+  border-radius: 6px;
+  padding: 10px 12px 12px;
+}
+.phase__deps-label { font: 700 8.5px var(--header-font); letter-spacing: .2em; color: var(--accent); text-transform: uppercase; }
+.phase__deps-text { font-size: 11.5px; line-height: 1.45; color: var(--text); font-weight: 500; margin: 4px 0 0; }
+.roadmap-footer { position: absolute; left: 64px; right: 64px; bottom: 36px; }
+.objective-bar {
+  display: flex; align-items: center; gap: 18px;
+  background: var(--accent-soft); border-left: 4px solid var(--accent);
+  border-radius: 6px; padding: 10px 16px;
+}
+.objective-bar__label { font: 700 11px var(--header-font); letter-spacing: .24em; text-transform: uppercase; color: var(--accent); }
+.objective-bar__text { font-size: 13px; color: var(--text); }
+.objective-bar__highlight { font-size: 13px; color: var(--text); font-weight: 700; }
+.objective-bar__sep { color: var(--text-subtle); }
+.metrics-line { margin-top: 10px; font: italic 11.5px var(--body-font); color: var(--text-subtle); }
+
+@media print {
+  @page { size: 13.333in 7.5in; margin: 0; }
+  html, body { background: var(--bg); }
+  .topbar { display: none; }
+  .deck { padding: 0; gap: 0; display: block; }
+  .slide {
+    page-break-after: always;
+    break-after: page;
+    border: none;
+    box-shadow: none;
+    border-radius: 0;
+    margin: 0;
+    width: 13.333in;
+    height: 7.5in;
+    max-width: none;
+    aspect-ratio: auto;
+  }
+  .slide:last-child { page-break-after: auto; break-after: auto; }
+  * { -webkit-print-color-adjust: exact; print-color-adjust: exact; color-adjust: exact; }
+}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar__title">DECK <em>· Subtitle</em></div>
+  <nav class="topbar__themes" id="themes">
+    <button class="theme-btn" data-theme-name="terracotta">Terracotta</button>
+    <button class="theme-btn" data-theme-name="carbon">Carbon</button>
+    <button class="theme-btn" data-theme-name="berry">Berry</button>
+    <button class="theme-btn" data-theme-name="lab">Lab</button>
+  </nav>
+  <span class="topbar__sep" aria-hidden="true"></span>
+  <button class="action-btn" id="export-pdf" title="Opens the print dialog — choose &quot;Save as PDF&quot;">Export PDF</button>
+</header>
+
+<main class="deck" id="deck">
+  <div style="padding:120px;color:var(--text-muted);text-align:center;">Loading <code>content.md</code>…</div>
+</main>
+
+<!-- Inline content baked by `node sync.js`. Used when fetch('content.md') is unavailable. -->
+<script type="text/yaml" id="content-data">
+</script>
+
+<script>
+const esc = (s) => String(s ?? "").replace(/[&<>"']/g, c => ({
+  "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+}[c]));
+
+// Render trusted, escaped HTML by parsing into a fragment and replacing the
+// element's children — safer than direct property assignment, and DOMPurify
+// is layered on top as defense-in-depth.
+function renderInto(el, html) {
+  const sanitized = window.DOMPurify
+    ? window.DOMPurify.sanitize(html, { ADD_ATTR: ["data-accent","data-status","data-theme-name","aria-pressed","data-cols","data-dense","data-n","style"] })
+    : html;
+  const range = document.createRange();
+  range.selectNodeContents(el);
+  const frag = range.createContextualFragment(sanitized);
+  el.replaceChildren(frag);
+}
+
+const renderers = {
+  title(d) {
+    return `
+      <div class="slide__tag">${esc(d.slide_label)}</div>
+      <h1 class="title-slide__main">${esc(d.title)}</h1>
+      <div class="title-slide__sub">${esc(d.subtitle)}</div>
+      <p class="title-slide__vision">${esc(d.vision)}</p>
+      <div class="title-slide__pillars">
+        ${(d.pillars || []).map(p => `
+          <div class="pillar">
+            <div class="pillar__num">${esc(p.num)}</div>
+            <div class="pillar__title">${esc(p.title)}</div>
+            <div class="pillar__desc">${esc(p.desc)}</div>
+          </div>`).join("")}
+      </div>
+      <div class="title-slide__footer">${esc(d.footer || "")}</div>
+    `;
+  },
+  architecture(d) {
+    return `
+      <div class="slide__tag">${esc(d.slide_label)}</div>
+      <h1 class="slide__title">${esc(d.title)}</h1>
+      <p class="slide__subtitle">${esc(d.subtitle)}</p>
+      <div class="arch-grid">
+        ${(d.cards || []).map(c => `
+          <div class="arch-card" data-accent="${esc(c.accent || "primary")}">
+            <div class="arch-card__tag">${esc(c.tag)}</div>
+            <div class="arch-card__title">${esc(c.title)}</div>
+            <div class="arch-card__label">${esc(c.function_label)}</div>
+            <div class="arch-card__text">${esc(c.function_text)}</div>
+            <div class="arch-card__divider"></div>
+            <div class="arch-card__challenge-label">${esc(c.challenge_label)}</div>
+            <div class="arch-card__challenge">${esc(c.challenge_text)}</div>
+          </div>`).join("")}
+      </div>
+    `;
+  },
+  cards(d) {
+    const cols = parseInt(d.columns || 3, 10);
+    const dense = d.dense ? "true" : "false";
+    const footerCls = d.footer_emphasis ? "cards-footer cards-footer--emphasis" : "cards-footer";
+    return `
+      <div class="slide__tag">${esc(d.slide_label)}</div>
+      <h1 class="slide__title">${esc(d.title)}</h1>
+      <p class="slide__subtitle">${esc(d.subtitle)}</p>
+      <div class="cards-wrap">
+        <div class="cards-grid" style="--cols:${cols};" data-dense="${dense}">
+          ${(d.cards || []).map(c => `
+            <div class="c-card" data-accent="${esc(c.accent || "primary")}">
+              ${c.num ? `<div class="c-card__num">${esc(c.num)}</div>` : ""}
+              <div class="c-card__title">${esc(c.title)}</div>
+              ${c.role ? `<div class="c-card__role">${esc(c.role)}</div>` : ""}
+              <div class="c-card__body">${esc(c.body)}</div>
+            </div>`).join("")}
+        </div>
+        ${d.footer ? `<div class="${footerCls}">${esc(d.footer)}</div>` : ""}
+      </div>
+    `;
+  },
+  flow(d) {
+    const n = (d.nodes || []).length || 5;
+    return `
+      <div class="slide__tag">${esc(d.slide_label)}</div>
+      <h1 class="slide__title">${esc(d.title)}</h1>
+      <p class="slide__subtitle">${esc(d.subtitle)}</p>
+      <div class="flow">
+        <div class="flow__circles" style="--n:${n};">
+          ${(d.nodes || []).map(node => `<div class="flow__circle">${esc(node.letter)}</div>`).join("")}
+        </div>
+        <div class="flow__cards" style="--n:${n};">
+          ${(d.nodes || []).map(node => `
+            <div class="flow__card">
+              <div class="flow__name">${esc(node.name)}</div>
+              <div class="flow__desc">${esc(node.desc)}</div>
+              ${node.tag ? `<span class="flow__tag">${esc(node.tag)}</span>` : ""}
+            </div>`).join("")}
+        </div>
+      </div>
+      ${d.footer ? `<div class="flow-footer">${esc(d.footer)}</div>` : ""}
+    `;
+  },
+  questions(d) {
+    return `
+      <div class="slide__tag">${esc(d.slide_label)}</div>
+      <h1 class="slide__title">${esc(d.title)}</h1>
+      <div class="questions-meta">
+        <p class="slide__subtitle" style="margin:0;">${esc(d.subtitle)}</p>
+      </div>
+      ${d.note ? `<div style="margin-top:14px;"><span class="questions-note">${esc(d.note)}</span></div>` : ""}
+      <div class="questions-grid">
+        ${(d.questions || []).map(q => `
+          <div class="q-card">
+            <div class="q-card__num">${esc(q.num)}</div>
+            <div class="q-card__badge">Q${esc(q.num)}</div>
+            <div class="q-card__headline">${esc(q.headline)}</div>
+            <div class="q-card__body">${esc(q.body)}</div>
+          </div>`).join("")}
+      </div>
+    `;
+  },
+  roadmap(d) {
+    const obj = d.primary_objective || {};
+    return `
+      <div class="slide__tag">${esc(d.slide_label)}</div>
+      <h1 class="slide__title">${esc(d.title)}</h1>
+      <p class="slide__subtitle">${esc(d.subtitle)}</p>
+      <div class="roadmap-grid">
+        ${(d.phases || []).map(p => `
+          <div class="phase" data-status="${esc(p.status || "")}">
+            <div class="phase__top">
+              <div class="phase__date">${esc(p.date)}</div>
+              <div class="phase__num">PHASE ${esc(p.num)}</div>
+            </div>
+            ${p.status === "in_progress" ? `<span class="phase__badge">IN PROGRESS</span>` : ""}
+            <div class="phase__title">${esc(p.title)}</div>
+            <div class="phase__divider"></div>
+            <div class="phase__label">OBJECTIVE</div>
+            <div class="phase__text">${esc(p.objective)}</div>
+            <div class="phase__label">SUBNETS / SCOPE</div>
+            <div class="phase__text">${esc(p.subnets)}</div>
+            <div class="phase__deps">
+              <div class="phase__deps-label">${esc(p.deps_label || "Dependencies")}</div>
+              <div class="phase__deps-text">${esc(p.deps)}</div>
+            </div>
+          </div>`).join("")}
+      </div>
+      <div class="roadmap-footer">
+        <div class="objective-bar">
+          <span class="objective-bar__label">${esc(obj.label || "Primary Objective")}</span>
+          <span class="objective-bar__text">${esc(obj.text || "")}</span>
+          <span class="objective-bar__sep">·</span>
+          <span class="objective-bar__highlight">${esc(obj.highlight || "")}</span>
+        </div>
+        ${d.phase1_metrics ? `<div class="metrics-line">${esc(d.phase1_metrics)}</div>` : ""}
+      </div>
+    `;
+  },
+};
+
+function renderSlides(docs) {
+  const slides = docs.filter(d => d && d.type && renderers[d.type]);
+  return slides.map(d => `<section class="slide slide--${esc(d.type)}">${renderers[d.type](d)}</section>`).join("");
+}
+
+async function loadContent() {
+  try {
+    const res = await fetch("content.md", { cache: "no-store" });
+    if (res.ok) {
+      const t = await res.text();
+      if (t.trim()) return { text: t, source: "fetch" };
+    }
+  } catch (e) {}
+  const inline = document.getElementById("content-data");
+  if (inline && inline.textContent.trim()) return { text: inline.textContent, source: "inline" };
+  return { text: null };
+}
+
+async function load() {
+  const deck = document.getElementById("deck");
+  const { text, source } = await loadContent();
+  if (!text) {
+    renderInto(deck, `<div style="padding:80px;text-align:center;color:var(--text-muted);max-width:720px;margin:0 auto;">
+      <strong>No content found.</strong><br>
+      Edit <code>content.md</code> then run <code>node sync.js</code> to bake it in,
+      or serve this folder via HTTP.
+    </div>`);
+    return;
+  }
+  let docs = [];
+  try { docs = jsyaml.loadAll(text); }
+  catch (e) {
+    renderInto(deck, `<div style="padding:60px;color:var(--primary);"><strong>YAML parse error:</strong><pre style="white-space:pre-wrap;">${esc(e.message)}</pre></div>`);
+    return;
+  }
+  renderInto(deck, renderSlides(docs));
+  if (source === "inline") console.info("Loaded inline content (run `node sync.js` after editing content.md).");
+}
+
+function setTheme(name) {
+  document.documentElement.dataset.theme = name;
+  localStorage.setItem("deck-theme", name);
+  document.querySelectorAll("[data-theme-name]").forEach(b => {
+    b.setAttribute("aria-pressed", String(b.dataset.themeName === name));
+  });
+}
+document.getElementById("themes").addEventListener("click", e => {
+  const btn = e.target.closest("[data-theme-name]");
+  if (btn) setTheme(btn.dataset.themeName);
+});
+const saved = localStorage.getItem("deck-theme");
+setTheme(saved || "terracotta");
+
+const exportBtn = document.getElementById("export-pdf");
+if (exportBtn) exportBtn.addEventListener("click", () => window.print());
+
+load();
+</script>
+</body>
+</html>
