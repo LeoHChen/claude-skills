@@ -80,6 +80,41 @@ State persists per browser via `localStorage.deck-mode`.
 | `End` | Jump to last slide |
 | `Esc` | Exit to Review mode |
 
+## Motion
+
+In Present mode, build-deck plays three layers of motion. All CSS-only, gated by `prefers-reduced-motion`.
+
+### Slide transitions
+
+Topbar **Motion** selector lets the user pick between Auto (theme default), Fade, Slide, Zoom, or Cut. Per-theme defaults:
+
+| Theme | Default | Theme | Default |
+|---|---|---|---|
+| Terracotta | Fade | Mono | Slide |
+| Carbon | Slide | Aurora | Zoom |
+| Berry | Fade | Brutalist | **Cut** (deliberate) |
+| Lab | Slide | Dusk | Fade |
+
+Selection persists to `localStorage.deck-transition`.
+
+### Element entrance cascade
+
+When a slide becomes current, child elements (title, subtitle, cards, pillars, flow nodes) stagger in over ~500ms total. Brutalist and Lab opt out — they're deliberately static.
+
+### Background motion (per theme)
+
+| Theme | Motion |
+|---|---|
+| Aurora | Gradient hue-drift, 20s loop |
+| Mono | Dotted grid pulse on each slide change |
+| Carbon | Scanline drift, 8s loop |
+| Berry | Vignette breathe, 8s loop |
+| Terracotta | Paper grain texture (static) |
+| Dusk | None (deferred to v1.2 — needs JS particles) |
+| Brutalist, Lab | None (deliberately static) |
+
+All motion is suppressed when the OS reports `prefers-reduced-motion: reduce`.
+
 ## Export to PDF
 
 The topbar has an **Export PDF** button that calls `window.print()`. The `@media print` CSS sets `@page` to 16:9 (13.333in × 7.5in), one slide per page, with `print-color-adjust: exact` so backgrounds and accents render. User picks "Save as PDF" in the print dialog. Works from both Review and Present mode (Present mode temporarily switches to Review for the print job, then restores).

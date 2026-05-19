@@ -17,6 +17,15 @@
   --mono-font:   "JetBrains Mono", ui-monospace, monospace;
   --radius: 14px;
   --transition: 280ms cubic-bezier(.2,.7,.2,1);
+  --entrance-anim: deck-enter-up;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
 
 [data-theme="terracotta"] {
@@ -74,7 +83,19 @@
   --shadow:0 8px 32px -8px rgba(0,0,0,.4);
   --display-font:var(--header-font);
 }
-[data-theme="aurora"] body { background: var(--bg); }
+[data-theme="aurora"] body {
+  background: linear-gradient(135deg, #2A1B4A 0%, #1A3D52 50%, #2A1B4A 100%);
+  background-size: 200% 200%;
+}
+@media (prefers-reduced-motion: no-preference) {
+  html[data-mode="present"][data-theme="aurora"] body {
+    animation: aurora-drift 20s ease-in-out infinite alternate;
+  }
+  @keyframes aurora-drift {
+    from { background-position: 0% 0%; }
+    to   { background-position: 100% 100%; }
+  }
+}
 [data-theme="aurora"] .slide,
 [data-theme="aurora"] .pillar,
 [data-theme="aurora"] .arch-card,
@@ -158,11 +179,40 @@
   background: repeating-linear-gradient(to bottom, var(--primary) 0 4px, transparent 4px 10px);
   width: 4px;
 }
+[data-theme="mono"] body {
+  background-color: var(--bg);
+  background-image: radial-gradient(circle, rgba(10,10,11,.06) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+@media (prefers-reduced-motion: no-preference) {
+  html[data-mode="present"][data-theme="mono"] body.is-pulsing {
+    animation: mono-grid-pulse 1.2s ease-out;
+  }
+  @keyframes mono-grid-pulse {
+    0%   { background-size: 22px 22px; }
+    100% { background-size: 24px 24px; }
+  }
+}
 
-/* Berry: editorial italic titles */
+/* Berry: editorial italic titles + Present-mode vignette breathe */
 [data-theme="berry"] .slide__title,
 [data-theme="berry"] .title-slide__main,
 [data-theme="berry"] .phase__title { font-style: italic; }
+@media (prefers-reduced-motion: no-preference) {
+  html[data-mode="present"][data-theme="berry"] body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: radial-gradient(ellipse at center, transparent 55%, rgba(42,22,34,.08) 100%);
+    pointer-events: none;
+    z-index: 1;
+    animation: berry-breathe 8s ease-in-out infinite alternate;
+  }
+  @keyframes berry-breathe {
+    from { opacity: .5; }
+    to   { opacity: 1; }
+  }
+}
 
 /* Dusk: italic serif title-hero, heavier subtitle */
 [data-theme="dusk"] .title-slide__main { font-style: italic; }
@@ -179,11 +229,42 @@
 [data-theme="lab"] .slide__title,
 [data-theme="lab"] .title-slide__main { letter-spacing: -0.04em; }
 
-/* Carbon: thinner left bar, widest tag tracking */
+/* Carbon: thinner left bar, widest tag tracking, Present-mode scanline drift */
 [data-theme="carbon"] .slide::before { width: 3px; }
 [data-theme="carbon"] .slide__tag { letter-spacing: .42em; }
+[data-theme="carbon"] .deck::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: repeating-linear-gradient(to bottom, transparent 0 3px, rgba(255,255,255,.015) 3px 4px);
+  pointer-events: none;
+  z-index: 1;
+}
+@media (prefers-reduced-motion: no-preference) {
+  html[data-mode="present"][data-theme="carbon"] .deck::before {
+    animation: carbon-scanline 8s linear infinite;
+  }
+  @keyframes carbon-scanline {
+    from { background-position: 0 0; }
+    to   { background-position: 0 4px; }
+  }
+}
 
-/* Terracotta: keep current (the default look-and-feel anchor) */
+/* Brutalist + Lab opt out of the entrance cascade (deliberately static) */
+[data-theme="brutalist"], [data-theme="lab"] { --entrance-anim: none; }
+
+/* Terracotta: paper grain texture (static — no animation, just warmth) */
+[data-theme="terracotta"] body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' seed='3'/><feColorMatrix values='0 0 0 0 0.4   0 0 0 0 0.25   0 0 0 0 0.15   0 0 0 0.18 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  background-size: 160px 160px;
+  opacity: .35;
+  mix-blend-mode: multiply;
+  pointer-events: none;
+  z-index: 1;
+}
 
 * { box-sizing: border-box; }
 html, body { margin: 0; padding: 0; }
@@ -264,13 +345,83 @@ html[data-mode="present"] body { overflow: hidden; }
 html[data-mode="present"] .deck {
   padding: 24px;
   gap: 0;
-  min-height: calc(100vh - 60px);
+  display: grid;
+  place-items: center;
+  min-height: 100vh;
 }
-html[data-mode="present"] .slide { display: none; }
-html[data-mode="present"] .slide.is-current { display: block; }
 html[data-mode="present"] .slide {
-  max-width: min(1280px, 100%);
+  grid-area: 1 / 1;
   width: 100%;
+  max-width: min(1280px, 100%);
+  display: none;
+}
+html[data-mode="present"] .slide.is-current,
+html[data-mode="present"] .slide.is-exiting { display: block; }
+html[data-mode="present"] .slide.is-current { z-index: 2; }
+html[data-mode="present"] .slide.is-exiting { z-index: 1; }
+
+@media (prefers-reduced-motion: no-preference) {
+  @keyframes deck-fade-in  { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes deck-fade-out { from { opacity: 1; } to { opacity: 0; } }
+  @keyframes deck-slide-in-right  { from { opacity: 0; transform: translateX(40px); }  to { opacity: 1; transform: translateX(0); } }
+  @keyframes deck-slide-out-left  { from { opacity: 1; transform: translateX(0); }    to { opacity: 0; transform: translateX(-40px); } }
+  @keyframes deck-zoom-in  { from { opacity: 0; transform: scale(.96); } to { opacity: 1; transform: scale(1); } }
+  @keyframes deck-zoom-out { from { opacity: 1; transform: scale(1); }  to { opacity: 0; transform: scale(1.04); } }
+
+  html[data-transition="fade"] .slide.is-entering    { animation: deck-fade-in        320ms ease both; }
+  html[data-transition="fade"] .slide.is-exiting     { animation: deck-fade-out       280ms ease both; }
+  html[data-transition="slide-h"] .slide.is-entering { animation: deck-slide-in-right 380ms cubic-bezier(.2,.7,.2,1) both; }
+  html[data-transition="slide-h"] .slide.is-exiting  { animation: deck-slide-out-left 320ms cubic-bezier(.2,.7,.2,1) both; }
+  html[data-transition="zoom"] .slide.is-entering    { animation: deck-zoom-in        420ms cubic-bezier(.2,.7,.2,1) both; }
+  html[data-transition="zoom"] .slide.is-exiting     { animation: deck-zoom-out       380ms cubic-bezier(.2,.7,.2,1) both; }
+
+  @keyframes deck-enter-up {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  html[data-mode="present"] .slide.is-current .slide__title,
+  html[data-mode="present"] .slide.is-current .title-slide__main {
+    animation: var(--entrance-anim) .48s cubic-bezier(.2,.7,.2,1) both;
+  }
+  html[data-mode="present"] .slide.is-current .slide__subtitle,
+  html[data-mode="present"] .slide.is-current .title-slide__sub,
+  html[data-mode="present"] .slide.is-current .title-slide__vision {
+    animation: var(--entrance-anim) .48s cubic-bezier(.2,.7,.2,1) .08s both;
+  }
+  html[data-mode="present"] .slide.is-current .pillar,
+  html[data-mode="present"] .slide.is-current .c-card,
+  html[data-mode="present"] .slide.is-current .flow__card,
+  html[data-mode="present"] .slide.is-current .q-card,
+  html[data-mode="present"] .slide.is-current .phase,
+  html[data-mode="present"] .slide.is-current .arch-card {
+    animation: var(--entrance-anim) .48s cubic-bezier(.2,.7,.2,1) both;
+  }
+  html[data-mode="present"] .slide.is-current .pillar:nth-child(1),
+  html[data-mode="present"] .slide.is-current .c-card:nth-child(1),
+  html[data-mode="present"] .slide.is-current .flow__card:nth-child(1),
+  html[data-mode="present"] .slide.is-current .q-card:nth-child(1),
+  html[data-mode="present"] .slide.is-current .phase:nth-child(1),
+  html[data-mode="present"] .slide.is-current .arch-card:nth-child(1) { animation-delay: .16s; }
+  html[data-mode="present"] .slide.is-current .pillar:nth-child(2),
+  html[data-mode="present"] .slide.is-current .c-card:nth-child(2),
+  html[data-mode="present"] .slide.is-current .flow__card:nth-child(2),
+  html[data-mode="present"] .slide.is-current .q-card:nth-child(2),
+  html[data-mode="present"] .slide.is-current .phase:nth-child(2),
+  html[data-mode="present"] .slide.is-current .arch-card:nth-child(2) { animation-delay: .22s; }
+  html[data-mode="present"] .slide.is-current .pillar:nth-child(3),
+  html[data-mode="present"] .slide.is-current .c-card:nth-child(3),
+  html[data-mode="present"] .slide.is-current .flow__card:nth-child(3),
+  html[data-mode="present"] .slide.is-current .q-card:nth-child(3),
+  html[data-mode="present"] .slide.is-current .phase:nth-child(3),
+  html[data-mode="present"] .slide.is-current .arch-card:nth-child(3) { animation-delay: .28s; }
+  html[data-mode="present"] .slide.is-current .pillar:nth-child(4),
+  html[data-mode="present"] .slide.is-current .c-card:nth-child(4),
+  html[data-mode="present"] .slide.is-current .flow__card:nth-child(4),
+  html[data-mode="present"] .slide.is-current .q-card:nth-child(4) { animation-delay: .34s; }
+  html[data-mode="present"] .slide.is-current .pillar:nth-child(5),
+  html[data-mode="present"] .slide.is-current .c-card:nth-child(5),
+  html[data-mode="present"] .slide.is-current .flow__card:nth-child(5),
+  html[data-mode="present"] .slide.is-current .q-card:nth-child(5) { animation-delay: .40s; }
 }
 
 .present-nav {
@@ -287,6 +438,8 @@ html[data-mode="present"] .slide {
 .present-nav.is-idle { opacity: 0; pointer-events: none; }
 .present-nav[hidden] { display: none !important; }
 html:not([data-mode="present"]) .present-nav { display: none !important; }
+html:not([data-mode="present"]) .topbar__motion { display: none; }
+.topbar__motion { position: relative; }
 .present-nav__btn {
   font: 600 11px var(--header-font); letter-spacing: .08em; text-transform: uppercase;
   border: 0; background: transparent; color: var(--text); cursor: pointer;
@@ -572,6 +725,20 @@ html:not([data-mode="present"]) .progress { display: none; }
       <button role="menuitem" type="button" data-theme-name="aurora">Aurora</button>
       <button role="menuitem" type="button" data-theme-name="brutalist">Brutalist</button>
       <button role="menuitem" type="button" data-theme-name="dusk">Dusk</button>
+    </div>
+  </div>
+  <div class="topbar__motion">
+    <button class="theme-trigger" id="motion-trigger" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="motion-menu">
+      <span class="theme-trigger__label">Motion</span>
+      <span class="theme-trigger__current" id="motion-current">Auto</span>
+      <span class="theme-trigger__caret" aria-hidden="true">▾</span>
+    </button>
+    <div class="theme-menu" id="motion-menu" role="menu" hidden>
+      <button role="menuitem" type="button" data-transition-name="auto">Auto</button>
+      <button role="menuitem" type="button" data-transition-name="fade">Fade</button>
+      <button role="menuitem" type="button" data-transition-name="slide-h">Slide</button>
+      <button role="menuitem" type="button" data-transition-name="zoom">Zoom</button>
+      <button role="menuitem" type="button" data-transition-name="cut">Cut</button>
     </div>
   </div>
   <button class="action-btn action-btn--ghost" id="mode-toggle" type="button" aria-pressed="false">Present</button>
@@ -946,6 +1113,7 @@ function setTheme(name) {
   themeMenu.querySelectorAll("[data-theme-name]").forEach(b => {
     b.setAttribute("aria-current", String(b.dataset.themeName === name));
   });
+  if (typeof applyTransition === "function") applyTransition();
 }
 
 function closeThemeMenu() {
@@ -974,8 +1142,67 @@ document.addEventListener("keydown", e => {
   if (e.key === "Escape" && !themeMenu.hidden) { closeThemeMenu(); themeTrigger.focus(); }
 });
 
+const transitionLabels = { auto: "Auto", fade: "Fade", "slide-h": "Slide", zoom: "Zoom", cut: "Cut" };
+const themeDefaultTransition = {
+  terracotta: "fade",
+  carbon:     "slide-h",
+  berry:      "fade",
+  lab:        "slide-h",
+  mono:       "slide-h",
+  aurora:     "zoom",
+  brutalist:  "cut",
+  dusk:       "fade",
+};
+const motionTrigger = document.getElementById("motion-trigger");
+const motionMenu = document.getElementById("motion-menu");
+const motionCurrent = document.getElementById("motion-current");
+
+function applyTransition() {
+  const userPref = localStorage.getItem("deck-transition") || "auto";
+  const theme = document.documentElement.dataset.theme || "terracotta";
+  const effective = userPref === "auto" ? (themeDefaultTransition[theme] || "fade") : userPref;
+  document.documentElement.dataset.transition = effective;
+}
+
+function setTransitionPref(name) {
+  localStorage.setItem("deck-transition", name);
+  motionCurrent.textContent = transitionLabels[name] || name;
+  motionMenu.querySelectorAll("[data-transition-name]").forEach(b => {
+    b.setAttribute("aria-current", String(b.dataset.transitionName === name));
+  });
+  applyTransition();
+}
+
+function closeMotionMenu() {
+  motionMenu.hidden = true;
+  motionTrigger.setAttribute("aria-expanded", "false");
+}
+
+motionTrigger.addEventListener("click", () => {
+  const willOpen = motionMenu.hidden;
+  motionMenu.hidden = !willOpen;
+  motionTrigger.setAttribute("aria-expanded", String(willOpen));
+});
+
+motionMenu.addEventListener("click", e => {
+  const btn = e.target.closest("[data-transition-name]");
+  if (btn) { setTransitionPref(btn.dataset.transitionName); closeMotionMenu(); motionTrigger.focus(); }
+});
+
+document.addEventListener("click", e => {
+  if (!motionMenu.hidden && !motionTrigger.contains(e.target) && !motionMenu.contains(e.target)) {
+    closeMotionMenu();
+  }
+});
+
+document.addEventListener("keydown", e => {
+  if (e.key === "Escape" && !motionMenu.hidden) { closeMotionMenu(); motionTrigger.focus(); }
+});
+
 const saved = localStorage.getItem("deck-theme");
 setTheme(saved || "terracotta");
+const savedTransition = localStorage.getItem("deck-transition") || "auto";
+setTransitionPref(savedTransition);
 
 const modeToggle = document.getElementById("mode-toggle");
 
@@ -1004,9 +1231,48 @@ function showSlide(idx) {
   const slides = getSlides();
   const total = slides.length;
   if (total === 0) return;
-  currentIndex = Math.max(0, Math.min(total - 1, idx));
-  slides.forEach((s, i) => s.classList.toggle("is-current", i === currentIndex));
+  const newIdx = Math.max(0, Math.min(total - 1, idx));
+  const oldSlide = slides[currentIndex];
+  const newSlide = slides[newIdx];
+  const animating =
+    document.documentElement.dataset.mode === "present" &&
+    oldSlide && oldSlide !== newSlide &&
+    document.documentElement.dataset.transition !== "cut" &&
+    !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (animating) {
+    transitionTo(oldSlide, newSlide);
+  } else {
+    slides.forEach((s, i) => {
+      s.classList.toggle("is-current", i === newIdx);
+      s.classList.remove("is-entering", "is-exiting");
+    });
+  }
+  currentIndex = newIdx;
   updateChrome();
+}
+
+function transitionTo(oldSlide, newSlide) {
+  // Layer C: theme-specific bg pulse triggers
+  document.body.classList.remove("is-pulsing");
+  void document.body.offsetWidth;
+  document.body.classList.add("is-pulsing");
+  setTimeout(() => document.body.classList.remove("is-pulsing"), 1200);
+
+  oldSlide.classList.remove("is-current");
+  oldSlide.classList.add("is-exiting");
+  const onOldEnd = () => {
+    oldSlide.classList.remove("is-exiting");
+    oldSlide.removeEventListener("animationend", onOldEnd);
+  };
+  oldSlide.addEventListener("animationend", onOldEnd);
+
+  newSlide.classList.add("is-current", "is-entering");
+  const onNewEnd = (e) => {
+    if (e.target !== newSlide) return;
+    newSlide.classList.remove("is-entering");
+    newSlide.removeEventListener("animationend", onNewEnd);
+  };
+  newSlide.addEventListener("animationend", onNewEnd);
 }
 
 const presentNav = document.getElementById("present-nav");
