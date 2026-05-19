@@ -288,6 +288,70 @@ html[data-mode="present"] .slide.is-exiting { display: block; }
 html[data-mode="present"] .slide.is-current { z-index: 2; }
 html[data-mode="present"] .slide.is-exiting { z-index: 1; }
 
+@media (prefers-reduced-motion: no-preference) {
+  @keyframes deck-fade-in  { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes deck-fade-out { from { opacity: 1; } to { opacity: 0; } }
+  @keyframes deck-slide-in-right  { from { opacity: 0; transform: translateX(40px); }  to { opacity: 1; transform: translateX(0); } }
+  @keyframes deck-slide-out-left  { from { opacity: 1; transform: translateX(0); }    to { opacity: 0; transform: translateX(-40px); } }
+  @keyframes deck-zoom-in  { from { opacity: 0; transform: scale(.96); } to { opacity: 1; transform: scale(1); } }
+  @keyframes deck-zoom-out { from { opacity: 1; transform: scale(1); }  to { opacity: 0; transform: scale(1.04); } }
+
+  html[data-transition="fade"] .slide.is-entering    { animation: deck-fade-in        320ms ease both; }
+  html[data-transition="fade"] .slide.is-exiting     { animation: deck-fade-out       280ms ease both; }
+  html[data-transition="slide-h"] .slide.is-entering { animation: deck-slide-in-right 380ms cubic-bezier(.2,.7,.2,1) both; }
+  html[data-transition="slide-h"] .slide.is-exiting  { animation: deck-slide-out-left 320ms cubic-bezier(.2,.7,.2,1) both; }
+  html[data-transition="zoom"] .slide.is-entering    { animation: deck-zoom-in        420ms cubic-bezier(.2,.7,.2,1) both; }
+  html[data-transition="zoom"] .slide.is-exiting     { animation: deck-zoom-out       380ms cubic-bezier(.2,.7,.2,1) both; }
+
+  @keyframes deck-enter-up {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  html[data-mode="present"] .slide.is-current .slide__title,
+  html[data-mode="present"] .slide.is-current .title-slide__main {
+    animation: var(--entrance-anim) .48s cubic-bezier(.2,.7,.2,1) both;
+  }
+  html[data-mode="present"] .slide.is-current .slide__subtitle,
+  html[data-mode="present"] .slide.is-current .title-slide__sub,
+  html[data-mode="present"] .slide.is-current .title-slide__vision {
+    animation: var(--entrance-anim) .48s cubic-bezier(.2,.7,.2,1) .08s both;
+  }
+  html[data-mode="present"] .slide.is-current .pillar,
+  html[data-mode="present"] .slide.is-current .c-card,
+  html[data-mode="present"] .slide.is-current .flow__card,
+  html[data-mode="present"] .slide.is-current .q-card,
+  html[data-mode="present"] .slide.is-current .phase,
+  html[data-mode="present"] .slide.is-current .arch-card {
+    animation: var(--entrance-anim) .48s cubic-bezier(.2,.7,.2,1) both;
+  }
+  html[data-mode="present"] .slide.is-current .pillar:nth-child(1),
+  html[data-mode="present"] .slide.is-current .c-card:nth-child(1),
+  html[data-mode="present"] .slide.is-current .flow__card:nth-child(1),
+  html[data-mode="present"] .slide.is-current .q-card:nth-child(1),
+  html[data-mode="present"] .slide.is-current .phase:nth-child(1),
+  html[data-mode="present"] .slide.is-current .arch-card:nth-child(1) { animation-delay: .16s; }
+  html[data-mode="present"] .slide.is-current .pillar:nth-child(2),
+  html[data-mode="present"] .slide.is-current .c-card:nth-child(2),
+  html[data-mode="present"] .slide.is-current .flow__card:nth-child(2),
+  html[data-mode="present"] .slide.is-current .q-card:nth-child(2),
+  html[data-mode="present"] .slide.is-current .phase:nth-child(2),
+  html[data-mode="present"] .slide.is-current .arch-card:nth-child(2) { animation-delay: .22s; }
+  html[data-mode="present"] .slide.is-current .pillar:nth-child(3),
+  html[data-mode="present"] .slide.is-current .c-card:nth-child(3),
+  html[data-mode="present"] .slide.is-current .flow__card:nth-child(3),
+  html[data-mode="present"] .slide.is-current .q-card:nth-child(3),
+  html[data-mode="present"] .slide.is-current .phase:nth-child(3),
+  html[data-mode="present"] .slide.is-current .arch-card:nth-child(3) { animation-delay: .28s; }
+  html[data-mode="present"] .slide.is-current .pillar:nth-child(4),
+  html[data-mode="present"] .slide.is-current .c-card:nth-child(4),
+  html[data-mode="present"] .slide.is-current .flow__card:nth-child(4),
+  html[data-mode="present"] .slide.is-current .q-card:nth-child(4) { animation-delay: .34s; }
+  html[data-mode="present"] .slide.is-current .pillar:nth-child(5),
+  html[data-mode="present"] .slide.is-current .c-card:nth-child(5),
+  html[data-mode="present"] .slide.is-current .flow__card:nth-child(5),
+  html[data-mode="present"] .slide.is-current .q-card:nth-child(5) { animation-delay: .40s; }
+}
+
 .present-nav {
   position: fixed; left: 50%; transform: translateX(-50%);
   bottom: 24px; z-index: 30;
