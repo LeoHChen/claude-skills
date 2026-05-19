@@ -6,7 +6,7 @@
 <title>Deck Title</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@500;700&family=Fraunces:opsz,wght@9..144,700;9..144,800;9..144,900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@300;500;600;700&family=JetBrains+Mono:wght@500;700;800&family=Fraunces:ital,opsz,wght@0,9..144,700..900;1,9..144,700..900&family=Archivo+Black&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/js-yaml@4.1.0/dist/js-yaml.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/dompurify@3.1.6/dist/purify.min.js"></script>
 <style>
@@ -28,7 +28,7 @@
   --shadow:0 1px 2px rgba(31,24,20,.04), 0 12px 32px -12px rgba(31,24,20,.18);
   --display-font:var(--serif-font);
 }
-[data-theme="terracotta"] {
+[data-theme="carbon"] {
   --bg:#0E0E10; --bg-soft:#181819; --card:#18181A; --card-accent:#232325;
   --primary:#B6FF5C; --primary-soft:rgba(182,255,92,.12);
   --accent:#FF7B47;  --accent-soft:rgba(255,123,71,.14);
@@ -55,6 +55,135 @@
   --shadow:0 1px 0 rgba(0,0,0,.04), 0 18px 40px -18px rgba(0,0,0,.18);
   --display-font:var(--header-font);
 }
+[data-theme="mono"] {
+  --bg:#FFFFFF; --bg-soft:#F5F5F7; --card:#FFFFFF; --card-accent:#F5F5F7;
+  --primary:#00B8D4; --primary-soft:rgba(0,184,212,.10);
+  --accent:#FF3366;  --accent-soft:rgba(255,51,102,.10);
+  --text:#0A0A0B; --text-muted:#52525B; --text-subtle:#A1A1AA;
+  --divider:rgba(10,10,11,.10);
+  --shadow:0 1px 0 rgba(0,0,0,.04), 0 12px 28px -16px rgba(0,0,0,.18);
+  --display-font:var(--header-font);
+}
+[data-theme="aurora"] {
+  --bg:linear-gradient(135deg,#2A1B4A 0%,#1A3D52 100%);
+  --bg-soft:rgba(255,255,255,.04); --card:rgba(255,255,255,.06); --card-accent:rgba(255,255,255,.08);
+  --primary:#A78BFA; --primary-soft:rgba(167,139,250,.18);
+  --accent:#5EEAD4;  --accent-soft:rgba(94,234,212,.18);
+  --text:#F4F4F8; --text-muted:#C7C7D2; --text-subtle:#8E8EA1;
+  --divider:rgba(255,255,255,.14);
+  --shadow:0 8px 32px -8px rgba(0,0,0,.4);
+  --display-font:var(--header-font);
+}
+[data-theme="aurora"] body { background: var(--bg); }
+[data-theme="aurora"] .slide,
+[data-theme="aurora"] .pillar,
+[data-theme="aurora"] .arch-card,
+[data-theme="aurora"] .c-card,
+[data-theme="aurora"] .q-card,
+[data-theme="aurora"] .flow__card,
+[data-theme="aurora"] .phase {
+  background: rgba(255,255,255,.06);
+  backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+  border-color: rgba(255,255,255,.14);
+}
+[data-theme="brutalist"] {
+  --bg:#FFFFFF; --bg-soft:#FFFFFF; --card:#FFFFFF; --card-accent:#FFFFFF;
+  --primary:#CCFF00; --primary-soft:rgba(204,255,0,.20);
+  --accent:#000000;  --accent-soft:rgba(0,0,0,.06);
+  --text:#000000; --text-muted:#1A1A1A; --text-subtle:#666666;
+  --divider:#000000;
+  --shadow:none;
+  --radius:0;
+  --display-font:var(--header-font);
+}
+[data-theme="brutalist"] .slide { border-width:2px; }
+[data-theme="brutalist"] .pillar,
+[data-theme="brutalist"] .arch-card,
+[data-theme="brutalist"] .c-card,
+[data-theme="brutalist"] .q-card,
+[data-theme="brutalist"] .flow__card,
+[data-theme="brutalist"] .phase { border-width:2px; border-radius:0; box-shadow:none; }
+[data-theme="brutalist"] .objective-bar,
+[data-theme="brutalist"] .phase__deps,
+[data-theme="brutalist"] .cards-footer--emphasis { border-radius:0; }
+[data-theme="brutalist"] .q-card__badge,
+[data-theme="brutalist"] .flow__tag,
+[data-theme="brutalist"] .phase__badge {
+  background: #000; color: #CCFF00;
+}
+[data-theme="brutalist"] .q-card__num { color: rgba(0,0,0,.10); }
+[data-theme="aurora"] .title-slide__main,
+[data-theme="aurora"] .slide__title {
+  text-shadow: 0 1px 24px rgba(0,0,0,.35);
+}
+[data-theme="aurora"] .slide__pageno,
+[data-theme="dusk"] .slide__pageno,
+[data-theme="carbon"] .slide__pageno { color: rgba(255,255,255,.55); }
+[data-theme="aurora"] .action-btn--ghost[aria-pressed="true"] {
+  background: rgba(255,255,255,.92); color: #1A1A2E; border-color: rgba(255,255,255,.92);
+}
+[data-theme="brutalist"] .theme-trigger,
+[data-theme="brutalist"] .theme-menu,
+[data-theme="brutalist"] .theme-menu button,
+[data-theme="brutalist"] .action-btn,
+[data-theme="brutalist"] .present-nav,
+[data-theme="brutalist"] .present-nav__btn { border-radius: 0; }
+[data-theme="dusk"] {
+  --bg:#1A1422; --bg-soft:#241A2E; --card:#2A1F35; --card-accent:#332642;
+  --primary:#C4B5FD; --primary-soft:rgba(196,181,253,.14);
+  --accent:#FCA5A5;  --accent-soft:rgba(252,165,165,.14);
+  --text:#F4F0F8; --text-muted:#B8AECC; --text-subtle:#857794;
+  --divider:rgba(255,255,255,.08);
+  --shadow:0 0 0 1px rgba(255,255,255,.04), 0 24px 60px -20px rgba(0,0,0,.6);
+  --display-font:var(--serif-font);
+}
+
+/* === Per-theme typography & structural variation === */
+
+/* Brutalist: heavy display, ALL CAPS, no left bar, thicker frame */
+[data-theme="brutalist"] { --display-font: "Archivo Black", "Space Grotesk", sans-serif; }
+[data-theme="brutalist"] .slide { border-width: 3px; }
+[data-theme="brutalist"] .slide::before { display: none; }
+[data-theme="brutalist"] .slide__title,
+[data-theme="brutalist"] .title-slide__main,
+[data-theme="brutalist"] .phase__title { text-transform: uppercase; letter-spacing: -0.01em; }
+[data-theme="brutalist"] .slide__tag { letter-spacing: .38em; }
+
+/* Mono: monospaced display font, dotted left bar */
+[data-theme="mono"] { --display-font: var(--mono-font); }
+[data-theme="mono"] .slide__title,
+[data-theme="mono"] .title-slide__main,
+[data-theme="mono"] .phase__title { letter-spacing: -0.03em; }
+[data-theme="mono"] .slide::before {
+  background: repeating-linear-gradient(to bottom, var(--primary) 0 4px, transparent 4px 10px);
+  width: 4px;
+}
+
+/* Berry: editorial italic titles */
+[data-theme="berry"] .slide__title,
+[data-theme="berry"] .title-slide__main,
+[data-theme="berry"] .phase__title { font-style: italic; }
+
+/* Dusk: italic serif title-hero, heavier subtitle */
+[data-theme="dusk"] .title-slide__main { font-style: italic; }
+[data-theme="dusk"] .slide__title { font-weight: 900; }
+
+/* Aurora: light-weight display, no left bar (gradient bg owns the chrome) */
+[data-theme="aurora"] .slide::before { display: none; }
+[data-theme="aurora"] .slide__title,
+[data-theme="aurora"] .title-slide__main { font-weight: 300; letter-spacing: -0.02em; }
+
+/* Lab: clinical minimalism — no left bar, no slide border */
+[data-theme="lab"] .slide::before { display: none; }
+[data-theme="lab"] .slide { border: none; }
+[data-theme="lab"] .slide__title,
+[data-theme="lab"] .title-slide__main { letter-spacing: -0.04em; }
+
+/* Carbon: thinner left bar, widest tag tracking */
+[data-theme="carbon"] .slide::before { width: 3px; }
+[data-theme="carbon"] .slide__tag { letter-spacing: .42em; }
+
+/* Terracotta: keep current (the default look-and-feel anchor) */
 
 * { box-sizing: border-box; }
 html, body { margin: 0; padding: 0; }
@@ -76,15 +205,34 @@ body {
 }
 .topbar__title { font-family: var(--header-font); font-weight: 700; font-size: 14px; letter-spacing: .04em; color: var(--text); }
 .topbar__title em { color: var(--text-subtle); font-style: normal; font-weight: 400; margin-left: 8px; }
-.topbar__themes { display: flex; gap: 6px; }
-.theme-btn {
+.topbar__theme { position: relative; }
+.theme-trigger {
+  display: inline-flex; align-items: center; gap: 8px;
   font: 600 11px var(--header-font); letter-spacing: .08em; text-transform: uppercase;
   padding: 8px 14px; border-radius: 999px;
-  border: 1px solid var(--divider); background: transparent; color: var(--text-muted);
+  border: 1px solid var(--divider); background: transparent; color: var(--text);
   cursor: pointer; transition: all 160ms ease;
 }
-.theme-btn:hover { color: var(--text); border-color: var(--text-subtle); }
-.theme-btn[aria-pressed="true"] { background: var(--text); color: var(--bg); border-color: var(--text); }
+.theme-trigger:hover { border-color: var(--text-subtle); }
+.theme-trigger__label { color: var(--text-subtle); }
+.theme-trigger__current { color: var(--text); }
+.theme-trigger__caret { font-size: 9px; color: var(--text-subtle); }
+.theme-menu {
+  position: absolute; top: calc(100% + 8px); right: 0; z-index: 20;
+  background: var(--card);
+  border: 1px solid var(--divider); border-radius: 12px;
+  box-shadow: var(--shadow);
+  padding: 6px; min-width: 180px;
+  display: flex; flex-direction: column; gap: 2px;
+}
+.theme-menu[hidden] { display: none; }
+.theme-menu button {
+  font: 500 13px var(--body-font); text-align: left;
+  padding: 9px 12px; border: 0; background: transparent; color: var(--text);
+  border-radius: 8px; cursor: pointer; transition: background 120ms ease;
+}
+.theme-menu button:hover { background: var(--bg-soft); }
+.theme-menu button[aria-current="true"] { color: var(--primary); font-weight: 600; }
 .topbar__sep { width: 1px; height: 22px; background: var(--divider); margin: 0 6px; }
 .action-btn {
   font: 600 11px var(--header-font); letter-spacing: .08em; text-transform: uppercase;
@@ -94,6 +242,11 @@ body {
 }
 .action-btn:hover { opacity: .88; }
 .action-btn:active { transform: translateY(1px); }
+.action-btn--ghost {
+  background: transparent; color: var(--text); border-color: var(--divider);
+}
+.action-btn--ghost:hover { border-color: var(--text); opacity: 1; }
+.action-btn--ghost[aria-pressed="true"] { background: var(--text); color: var(--bg); border-color: var(--text); }
 
 .deck { padding: 32px 28px 80px; display: flex; flex-direction: column; gap: 32px; align-items: center; }
 .slide {
@@ -106,6 +259,57 @@ body {
   transition: background var(--transition), border-color var(--transition);
 }
 .slide::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 6px; background: var(--primary); }
+
+html[data-mode="present"] body { overflow: hidden; }
+html[data-mode="present"] .deck {
+  padding: 24px;
+  gap: 0;
+  min-height: calc(100vh - 60px);
+}
+html[data-mode="present"] .slide { display: none; }
+html[data-mode="present"] .slide.is-current { display: block; }
+html[data-mode="present"] .slide {
+  max-width: min(1280px, 100%);
+  width: 100%;
+}
+
+.present-nav {
+  position: fixed; left: 50%; transform: translateX(-50%);
+  bottom: 24px; z-index: 30;
+  display: flex; align-items: center; gap: 18px;
+  background: color-mix(in srgb, var(--card) 85%, transparent);
+  backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+  border: 1px solid var(--divider); border-radius: 999px;
+  padding: 10px 18px;
+  box-shadow: var(--shadow);
+  opacity: 1; transition: opacity 280ms ease;
+}
+.present-nav.is-idle { opacity: 0; pointer-events: none; }
+.present-nav[hidden] { display: none !important; }
+html:not([data-mode="present"]) .present-nav { display: none !important; }
+.present-nav__btn {
+  font: 600 11px var(--header-font); letter-spacing: .08em; text-transform: uppercase;
+  border: 0; background: transparent; color: var(--text); cursor: pointer;
+  padding: 4px 8px; border-radius: 6px;
+}
+.present-nav__btn:hover { color: var(--primary); }
+.present-nav__count {
+  font: 500 12px var(--mono-font); color: var(--text-subtle); letter-spacing: .08em;
+  min-width: 64px; text-align: center;
+}
+
+.progress {
+  position: fixed; top: 0; left: 0; right: 0; height: 2px;
+  background: transparent; z-index: 25;
+  pointer-events: none;
+}
+.progress::after {
+  content: ""; display: block; height: 100%;
+  width: var(--progress, 0%);
+  background: var(--primary);
+  transition: width 220ms cubic-bezier(.2,.7,.2,1);
+}
+html:not([data-mode="present"]) .progress { display: none; }
 .slide__tag { font: 700 11px/1 var(--header-font); letter-spacing: .28em; text-transform: uppercase; color: var(--primary); }
 .slide__title {
   font-family: var(--display-font); font-weight: 800;
@@ -113,6 +317,13 @@ body {
   letter-spacing: -0.01em; margin: 14px 0 14px; color: var(--text);
 }
 .slide__subtitle { font-size: 17px; line-height: 1.5; color: var(--text-muted); max-width: 1020px; font-style: italic; }
+.slide__pageno {
+  position: absolute; right: 28px; bottom: 22px;
+  font: 500 10.5px var(--mono-font); letter-spacing: .12em;
+  color: var(--text-subtle);
+  z-index: 2;
+  user-select: none;
+}
 
 .title-slide__main {
   font-family: var(--display-font); font-weight: 900;
@@ -323,7 +534,7 @@ body {
 @media print {
   @page { size: 13.333in 7.5in; margin: 0; }
   html, body { background: var(--bg); }
-  .topbar { display: none; }
+  .topbar, .present-nav, .progress { display: none !important; }
   .deck { padding: 0; gap: 0; display: block; }
   .slide {
     page-break-after: always;
@@ -346,22 +557,164 @@ body {
 
 <header class="topbar">
   <div class="topbar__title">DECK <em>· Subtitle</em></div>
-  <nav class="topbar__themes" id="themes">
-    <button class="theme-btn" data-theme-name="terracotta">Terracotta</button>
-    <button class="theme-btn" data-theme-name="carbon">Carbon</button>
-    <button class="theme-btn" data-theme-name="berry">Berry</button>
-    <button class="theme-btn" data-theme-name="lab">Lab</button>
-  </nav>
+  <div class="topbar__theme">
+    <button class="theme-trigger" id="theme-trigger" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="theme-menu">
+      <span class="theme-trigger__label">Theme</span>
+      <span class="theme-trigger__current" id="theme-current">Terracotta</span>
+      <span class="theme-trigger__caret" aria-hidden="true">▾</span>
+    </button>
+    <div class="theme-menu" id="theme-menu" role="menu" hidden>
+      <button role="menuitem" type="button" data-theme-name="terracotta">Terracotta</button>
+      <button role="menuitem" type="button" data-theme-name="carbon">Carbon</button>
+      <button role="menuitem" type="button" data-theme-name="berry">Berry</button>
+      <button role="menuitem" type="button" data-theme-name="lab">Lab</button>
+      <button role="menuitem" type="button" data-theme-name="mono">Mono</button>
+      <button role="menuitem" type="button" data-theme-name="aurora">Aurora</button>
+      <button role="menuitem" type="button" data-theme-name="brutalist">Brutalist</button>
+      <button role="menuitem" type="button" data-theme-name="dusk">Dusk</button>
+    </div>
+  </div>
+  <button class="action-btn action-btn--ghost" id="mode-toggle" type="button" aria-pressed="false">Present</button>
   <span class="topbar__sep" aria-hidden="true"></span>
   <button class="action-btn" id="export-pdf" title="Opens the print dialog — choose &quot;Save as PDF&quot;">Export PDF</button>
 </header>
+
+<div class="progress" id="progress" aria-hidden="true"></div>
 
 <main class="deck" id="deck">
   <div style="padding:120px;color:var(--text-muted);text-align:center;">Loading <code>content.md</code>…</div>
 </main>
 
+<div class="present-nav" id="present-nav" hidden>
+  <button class="present-nav__btn" id="nav-prev" type="button" aria-label="Previous slide">‹ Prev</button>
+  <span class="present-nav__count" id="nav-count" aria-live="polite">01 / 01</span>
+  <button class="present-nav__btn" id="nav-next" type="button" aria-label="Next slide">Next ›</button>
+</div>
+
 <!-- Inline content baked by `node sync.js`. Used when fetch('content.md') is unavailable. -->
 <script type="text/yaml" id="content-data">
+# Deck content
+# YAML stream — each slide is one document, separated by `---`.
+# Edit any field, then run `node sync.js` (or `make sync DECK=<deck-name>` from the project root).
+# Slide types: title, architecture, cards, flow, roadmap.
+
+---
+type: title
+slide_label: Subtitle · v0.1
+title: TITLE
+subtitle: One-line tagline.
+vision: >-
+  The vision statement — one to two sentences setting the frame for the rest of the deck.
+pillars:
+  - num: "01"
+    title: First pillar
+    desc: One-sentence supporting claim.
+  - num: "02"
+    title: Second pillar
+    desc: One-sentence supporting claim.
+  - num: "03"
+    title: Third pillar
+    desc: One-sentence supporting claim.
+footer: Author · Date
+
+---
+type: cards
+slide_label: 01 / Section
+title: Section heading.
+subtitle: One-sentence framing for the cards below.
+columns: 3        # 2 or 3
+# dense: true     # uncomment for tighter padding (e.g., 6 cards)
+cards:
+  - num: "01"
+    title: Card 1 title
+    role: Card subtitle / role
+    body: One- or two-sentence body.
+  - num: "02"
+    title: Card 2 title
+    role: Card subtitle / role
+    body: One- or two-sentence body.
+  - num: "03"
+    title: Card 3 title
+    role: Card subtitle / role
+    body: One- or two-sentence body.
+# footer: Optional supporting note
+# footer_emphasis: true   # render footer as accented callout
+
+---
+type: flow
+slide_label: 02 / Process
+title: Pipeline / flow heading.
+subtitle: One-sentence framing.
+nodes:
+  - letter: A
+    name: Stage A
+    desc: One-sentence description.
+    tag: Optional Tag
+  - letter: B
+    name: Stage B
+    desc: One-sentence description.
+    tag: Optional Tag
+  - letter: C
+    name: Stage C
+    desc: One-sentence description.
+footer: Optional footer note explaining how the stages connect.
+
+---
+type: architecture
+slide_label: 03 / Comparison
+title: Two-card comparison heading.
+subtitle: One-sentence framing.
+cards:
+  - tag: Side A · Tag
+    accent: primary
+    title: First card title.
+    function_label: Function
+    function_text: One- or two-sentence description.
+    challenge_label: Challenge / Counterpoint Label
+    challenge_text: One- or two-sentence highlighted callout.
+  - tag: Side B · Tag
+    accent: accent
+    title: Second card title.
+    function_label: Function
+    function_text: One- or two-sentence description.
+    challenge_label: Challenge / Counterpoint Label
+    challenge_text: One- or two-sentence highlighted callout.
+
+---
+type: roadmap
+slide_label: 04 / Execution
+title: Phased roadmap heading.
+subtitle: One-sentence framing.
+phases:
+  - num: "1"
+    date: Phase 1 date
+    status: in_progress    # remove for non-current phases
+    title: Phase 1 title
+    objective: What we're trying to do.
+    subnets: What's in scope for this phase.
+    deps_label: Dependencies / Outputs
+    deps: Critical dependencies or outputs (highlighted block).
+  - num: "2"
+    date: Phase 2 date
+    title: Phase 2 title
+    objective: What we're trying to do.
+    subnets: What's in scope for this phase.
+    deps_label: Dependencies / Outputs
+    deps: Critical dependencies or outputs.
+  - num: "3"
+    date: Phase 3 date
+    title: Phase 3 title
+    objective: What we're trying to do.
+    subnets: What's in scope for this phase.
+    deps_label: Dependencies / Outputs
+    deps: Critical dependencies or outputs.
+primary_objective:
+  label: Primary Objective
+  text: Main objective text.
+  highlight: "Headline metric or target."
+phase1_metrics: >-
+  Optional small italic footer line — e.g., success metrics for Phase 1.
+
 </script>
 
 <script>
@@ -526,6 +879,22 @@ function renderSlides(docs) {
   return slides.map(d => `<section class="slide slide--${esc(d.type)}">${renderers[d.type](d)}</section>`).join("");
 }
 
+function injectPageNumbers() {
+  const slides = document.querySelectorAll("#deck .slide");
+  const total = slides.length;
+  if (total === 0) return;
+  const pad = String(total).length;
+  slides.forEach((slide, i) => {
+    let el = slide.querySelector(".slide__pageno");
+    if (!el) {
+      el = document.createElement("div");
+      el.className = "slide__pageno";
+      slide.appendChild(el);
+    }
+    el.textContent = `${String(i + 1).padStart(pad, "0")} / ${String(total).padStart(pad, "0")}`;
+  });
+}
+
 async function loadContent() {
   try {
     const res = await fetch("content.md", { cache: "no-store" });
@@ -557,25 +926,148 @@ async function load() {
     return;
   }
   renderInto(deck, renderSlides(docs));
+  injectPageNumbers();
+  showSlide(currentIndex);
   if (source === "inline") console.info("Loaded inline content (run `node sync.js` after editing content.md).");
 }
+
+const themeLabels = {
+  terracotta: "Terracotta", carbon: "Carbon", berry: "Berry", lab: "Lab",
+  mono: "Mono", aurora: "Aurora", brutalist: "Brutalist", dusk: "Dusk"
+};
+const themeTrigger = document.getElementById("theme-trigger");
+const themeMenu = document.getElementById("theme-menu");
+const themeCurrent = document.getElementById("theme-current");
 
 function setTheme(name) {
   document.documentElement.dataset.theme = name;
   localStorage.setItem("deck-theme", name);
-  document.querySelectorAll("[data-theme-name]").forEach(b => {
-    b.setAttribute("aria-pressed", String(b.dataset.themeName === name));
+  themeCurrent.textContent = themeLabels[name] || name;
+  themeMenu.querySelectorAll("[data-theme-name]").forEach(b => {
+    b.setAttribute("aria-current", String(b.dataset.themeName === name));
   });
 }
-document.getElementById("themes").addEventListener("click", e => {
-  const btn = e.target.closest("[data-theme-name]");
-  if (btn) setTheme(btn.dataset.themeName);
+
+function closeThemeMenu() {
+  themeMenu.hidden = true;
+  themeTrigger.setAttribute("aria-expanded", "false");
+}
+
+themeTrigger.addEventListener("click", () => {
+  const willOpen = themeMenu.hidden;
+  themeMenu.hidden = !willOpen;
+  themeTrigger.setAttribute("aria-expanded", String(willOpen));
 });
+
+themeMenu.addEventListener("click", e => {
+  const btn = e.target.closest("[data-theme-name]");
+  if (btn) { setTheme(btn.dataset.themeName); closeThemeMenu(); themeTrigger.focus(); }
+});
+
+document.addEventListener("click", e => {
+  if (!themeMenu.hidden && !themeTrigger.contains(e.target) && !themeMenu.contains(e.target)) {
+    closeThemeMenu();
+  }
+});
+
+document.addEventListener("keydown", e => {
+  if (e.key === "Escape" && !themeMenu.hidden) { closeThemeMenu(); themeTrigger.focus(); }
+});
+
 const saved = localStorage.getItem("deck-theme");
 setTheme(saved || "terracotta");
 
+const modeToggle = document.getElementById("mode-toggle");
+
+function setMode(mode) {
+  document.documentElement.dataset.mode = mode;
+  localStorage.setItem("deck-mode", mode);
+  modeToggle.textContent = mode === "present" ? "Review" : "Present";
+  modeToggle.setAttribute("aria-pressed", String(mode === "present"));
+  presentNav.hidden = mode !== "present";
+  if (mode === "present") {
+    showSlide(currentIndex);
+    bumpNavIdle();
+  }
+}
+
+modeToggle.addEventListener("click", () => {
+  setMode(document.documentElement.dataset.mode === "present" ? "review" : "present");
+});
+
+let currentIndex = 0;
+
+function getSlides() { return document.querySelectorAll("#deck .slide"); }
+function getTotal() { return getSlides().length; }
+
+function showSlide(idx) {
+  const slides = getSlides();
+  const total = slides.length;
+  if (total === 0) return;
+  currentIndex = Math.max(0, Math.min(total - 1, idx));
+  slides.forEach((s, i) => s.classList.toggle("is-current", i === currentIndex));
+  updateChrome();
+}
+
+const presentNav = document.getElementById("present-nav");
+const navCount = document.getElementById("nav-count");
+document.getElementById("nav-prev").addEventListener("click", () => showSlide(currentIndex - 1));
+document.getElementById("nav-next").addEventListener("click", () => showSlide(currentIndex + 1));
+
+let navIdleTimer = null;
+function bumpNavIdle() {
+  presentNav.classList.remove("is-idle");
+  clearTimeout(navIdleTimer);
+  navIdleTimer = setTimeout(() => presentNav.classList.add("is-idle"), 2000);
+}
+document.addEventListener("mousemove", () => {
+  if (document.documentElement.dataset.mode === "present") bumpNavIdle();
+});
+
+function updateChrome() {
+  const total = getTotal();
+  if (total === 0) return;
+  const pad = String(total).length;
+  navCount.textContent = `${String(currentIndex + 1).padStart(pad, "0")} / ${String(total).padStart(pad, "0")}`;
+  const pct = ((currentIndex + 1) / total) * 100;
+  document.getElementById("progress").style.setProperty("--progress", `${pct}%`);
+}
+
+document.addEventListener("keydown", e => {
+  if (document.documentElement.dataset.mode !== "present") return;
+  if (e.target.matches("input, textarea, [contenteditable], [contenteditable='true']")) return;
+  switch (e.key) {
+    case "ArrowLeft":
+      showSlide(currentIndex - 1); e.preventDefault(); break;
+    case "ArrowRight":
+    case " ":
+      showSlide(currentIndex + 1); e.preventDefault(); break;
+    case "Home":
+      showSlide(0); e.preventDefault(); break;
+    case "End":
+      showSlide(getTotal() - 1); e.preventDefault(); break;
+    case "Escape":
+      setMode("review"); e.preventDefault(); break;
+  }
+});
+
+setMode(localStorage.getItem("deck-mode") || "review");
+
 const exportBtn = document.getElementById("export-pdf");
-if (exportBtn) exportBtn.addEventListener("click", () => window.print());
+if (exportBtn) {
+  exportBtn.addEventListener("click", () => {
+    const wasPresent = document.documentElement.dataset.mode === "present";
+    if (wasPresent) {
+      document.documentElement.dataset.mode = "review";
+      const restore = () => {
+        document.documentElement.dataset.mode = "present";
+        window.removeEventListener("afterprint", restore);
+      };
+      window.addEventListener("afterprint", restore);
+    }
+    window.print();
+  });
+}
 
 load();
 </script>
