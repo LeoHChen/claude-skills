@@ -203,6 +203,31 @@ html[data-mode="present"] .slide {
   max-width: min(1280px, 100%);
   width: 100%;
 }
+
+.present-nav {
+  position: fixed; left: 50%; transform: translateX(-50%);
+  bottom: 24px; z-index: 30;
+  display: flex; align-items: center; gap: 18px;
+  background: color-mix(in srgb, var(--card) 85%, transparent);
+  backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+  border: 1px solid var(--divider); border-radius: 999px;
+  padding: 10px 18px;
+  box-shadow: var(--shadow);
+  opacity: 1; transition: opacity 280ms ease;
+}
+.present-nav.is-idle { opacity: 0; pointer-events: none; }
+.present-nav[hidden] { display: none !important; }
+html:not([data-mode="present"]) .present-nav { display: none !important; }
+.present-nav__btn {
+  font: 600 11px var(--header-font); letter-spacing: .08em; text-transform: uppercase;
+  border: 0; background: transparent; color: var(--text); cursor: pointer;
+  padding: 4px 8px; border-radius: 6px;
+}
+.present-nav__btn:hover { color: var(--primary); }
+.present-nav__count {
+  font: 500 12px var(--mono-font); color: var(--text-subtle); letter-spacing: .08em;
+  min-width: 64px; text-align: center;
+}
 .slide__tag { font: 700 11px/1 var(--header-font); letter-spacing: .28em; text-transform: uppercase; color: var(--primary); }
 .slide__title {
   font-family: var(--display-font); font-weight: 800;
@@ -476,6 +501,12 @@ html[data-mode="present"] .slide {
   <div style="padding:120px;color:var(--text-muted);text-align:center;">Loading <code>content.md</code>…</div>
 </main>
 
+<div class="present-nav" id="present-nav" hidden>
+  <button class="present-nav__btn" id="nav-prev" type="button" aria-label="Previous slide">‹ Prev</button>
+  <span class="present-nav__count" id="nav-count" aria-live="polite">01 / 01</span>
+  <button class="present-nav__btn" id="nav-next" type="button" aria-label="Next slide">Next ›</button>
+</div>
+
 <!-- Inline content baked by `node sync.js`. Used when fetch('content.md') is unavailable. -->
 <script type="text/yaml" id="content-data">
 </script>
@@ -747,8 +778,10 @@ function setMode(mode) {
   localStorage.setItem("deck-mode", mode);
   modeToggle.textContent = mode === "present" ? "Review" : "Present";
   modeToggle.setAttribute("aria-pressed", String(mode === "present"));
+  presentNav.hidden = mode !== "present";
   if (mode === "present") {
     showSlide(currentIndex);
+    bumpNavIdle();
   }
 }
 
@@ -770,8 +803,26 @@ function showSlide(idx) {
   updateChrome();
 }
 
+const presentNav = document.getElementById("present-nav");
+const navCount = document.getElementById("nav-count");
+document.getElementById("nav-prev").addEventListener("click", () => showSlide(currentIndex - 1));
+document.getElementById("nav-next").addEventListener("click", () => showSlide(currentIndex + 1));
+
+let navIdleTimer = null;
+function bumpNavIdle() {
+  presentNav.classList.remove("is-idle");
+  clearTimeout(navIdleTimer);
+  navIdleTimer = setTimeout(() => presentNav.classList.add("is-idle"), 2000);
+}
+document.addEventListener("mousemove", () => {
+  if (document.documentElement.dataset.mode === "present") bumpNavIdle();
+});
+
 function updateChrome() {
-  // Filled in by Tasks 8 (nav counter) and 9 (progress bar).
+  const total = getTotal();
+  if (total === 0) return;
+  const pad = String(total).length;
+  navCount.textContent = `${String(currentIndex + 1).padStart(pad, "0")} / ${String(total).padStart(pad, "0")}`;
 }
 
 document.addEventListener("keydown", e => {
