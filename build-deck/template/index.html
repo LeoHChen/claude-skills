@@ -83,7 +83,19 @@
   --shadow:0 8px 32px -8px rgba(0,0,0,.4);
   --display-font:var(--header-font);
 }
-[data-theme="aurora"] body { background: var(--bg); }
+[data-theme="aurora"] body {
+  background: linear-gradient(135deg, #2A1B4A 0%, #1A3D52 50%, #2A1B4A 100%);
+  background-size: 200% 200%;
+}
+@media (prefers-reduced-motion: no-preference) {
+  html[data-mode="present"][data-theme="aurora"] body {
+    animation: aurora-drift 20s ease-in-out infinite alternate;
+  }
+  @keyframes aurora-drift {
+    from { background-position: 0% 0%; }
+    to   { background-position: 100% 100%; }
+  }
+}
 [data-theme="aurora"] .slide,
 [data-theme="aurora"] .pillar,
 [data-theme="aurora"] .arch-card,
@@ -167,11 +179,40 @@
   background: repeating-linear-gradient(to bottom, var(--primary) 0 4px, transparent 4px 10px);
   width: 4px;
 }
+[data-theme="mono"] body {
+  background-color: var(--bg);
+  background-image: radial-gradient(circle, rgba(10,10,11,.06) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+@media (prefers-reduced-motion: no-preference) {
+  html[data-mode="present"][data-theme="mono"] body.is-pulsing {
+    animation: mono-grid-pulse 1.2s ease-out;
+  }
+  @keyframes mono-grid-pulse {
+    0%   { background-size: 22px 22px; }
+    100% { background-size: 24px 24px; }
+  }
+}
 
-/* Berry: editorial italic titles */
+/* Berry: editorial italic titles + Present-mode vignette breathe */
 [data-theme="berry"] .slide__title,
 [data-theme="berry"] .title-slide__main,
 [data-theme="berry"] .phase__title { font-style: italic; }
+@media (prefers-reduced-motion: no-preference) {
+  html[data-mode="present"][data-theme="berry"] body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: radial-gradient(ellipse at center, transparent 55%, rgba(42,22,34,.08) 100%);
+    pointer-events: none;
+    z-index: 1;
+    animation: berry-breathe 8s ease-in-out infinite alternate;
+  }
+  @keyframes berry-breathe {
+    from { opacity: .5; }
+    to   { opacity: 1; }
+  }
+}
 
 /* Dusk: italic serif title-hero, heavier subtitle */
 [data-theme="dusk"] .title-slide__main { font-style: italic; }
@@ -188,14 +229,42 @@
 [data-theme="lab"] .slide__title,
 [data-theme="lab"] .title-slide__main { letter-spacing: -0.04em; }
 
-/* Carbon: thinner left bar, widest tag tracking */
+/* Carbon: thinner left bar, widest tag tracking, Present-mode scanline drift */
 [data-theme="carbon"] .slide::before { width: 3px; }
 [data-theme="carbon"] .slide__tag { letter-spacing: .42em; }
+[data-theme="carbon"] .deck::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: repeating-linear-gradient(to bottom, transparent 0 3px, rgba(255,255,255,.015) 3px 4px);
+  pointer-events: none;
+  z-index: 1;
+}
+@media (prefers-reduced-motion: no-preference) {
+  html[data-mode="present"][data-theme="carbon"] .deck::before {
+    animation: carbon-scanline 8s linear infinite;
+  }
+  @keyframes carbon-scanline {
+    from { background-position: 0 0; }
+    to   { background-position: 0 4px; }
+  }
+}
 
 /* Brutalist + Lab opt out of the entrance cascade (deliberately static) */
 [data-theme="brutalist"], [data-theme="lab"] { --entrance-anim: none; }
 
-/* Terracotta: keep current (the default look-and-feel anchor) */
+/* Terracotta: paper grain texture (static — no animation, just warmth) */
+[data-theme="terracotta"] body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' seed='3'/><feColorMatrix values='0 0 0 0 0.4   0 0 0 0 0.25   0 0 0 0 0.15   0 0 0 0.18 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  background-size: 160px 160px;
+  opacity: .35;
+  mix-blend-mode: multiply;
+  pointer-events: none;
+  z-index: 1;
+}
 
 * { box-sizing: border-box; }
 html, body { margin: 0; padding: 0; }
