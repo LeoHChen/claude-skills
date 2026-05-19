@@ -173,6 +173,11 @@ body {
 }
 .action-btn:hover { opacity: .88; }
 .action-btn:active { transform: translateY(1px); }
+.action-btn--ghost {
+  background: transparent; color: var(--text); border-color: var(--divider);
+}
+.action-btn--ghost:hover { border-color: var(--text); opacity: 1; }
+.action-btn--ghost[aria-pressed="true"] { background: var(--text); color: var(--bg); border-color: var(--text); }
 
 .deck { padding: 32px 28px 80px; display: flex; flex-direction: column; gap: 32px; align-items: center; }
 .slide {
@@ -449,6 +454,7 @@ body {
       <button role="menuitem" type="button" data-theme-name="dusk">Dusk</button>
     </div>
   </div>
+  <button class="action-btn action-btn--ghost" id="mode-toggle" type="button" aria-pressed="false">Present</button>
   <span class="topbar__sep" aria-hidden="true"></span>
   <button class="action-btn" id="export-pdf" title="Opens the print dialog — choose &quot;Save as PDF&quot;">Export PDF</button>
 </header>
@@ -719,6 +725,21 @@ document.addEventListener("keydown", e => {
 
 const saved = localStorage.getItem("deck-theme");
 setTheme(saved || "terracotta");
+
+const modeToggle = document.getElementById("mode-toggle");
+
+function setMode(mode) {
+  document.documentElement.dataset.mode = mode;
+  localStorage.setItem("deck-mode", mode);
+  modeToggle.textContent = mode === "present" ? "Review" : "Present";
+  modeToggle.setAttribute("aria-pressed", String(mode === "present"));
+}
+
+modeToggle.addEventListener("click", () => {
+  setMode(document.documentElement.dataset.mode === "present" ? "review" : "present");
+});
+
+setMode(localStorage.getItem("deck-mode") || "review");
 
 const exportBtn = document.getElementById("export-pdf");
 if (exportBtn) exportBtn.addEventListener("click", () => window.print());
