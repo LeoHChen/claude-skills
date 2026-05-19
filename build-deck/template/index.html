@@ -369,6 +369,8 @@ html[data-mode="present"] .slide.is-exiting { z-index: 1; }
 .present-nav.is-idle { opacity: 0; pointer-events: none; }
 .present-nav[hidden] { display: none !important; }
 html:not([data-mode="present"]) .present-nav { display: none !important; }
+html:not([data-mode="present"]) .topbar__motion { display: none; }
+.topbar__motion { position: relative; }
 .present-nav__btn {
   font: 600 11px var(--header-font); letter-spacing: .08em; text-transform: uppercase;
   border: 0; background: transparent; color: var(--text); cursor: pointer;
@@ -654,6 +656,20 @@ html:not([data-mode="present"]) .progress { display: none; }
       <button role="menuitem" type="button" data-theme-name="aurora">Aurora</button>
       <button role="menuitem" type="button" data-theme-name="brutalist">Brutalist</button>
       <button role="menuitem" type="button" data-theme-name="dusk">Dusk</button>
+    </div>
+  </div>
+  <div class="topbar__motion">
+    <button class="theme-trigger" id="motion-trigger" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="motion-menu">
+      <span class="theme-trigger__label">Motion</span>
+      <span class="theme-trigger__current" id="motion-current">Auto</span>
+      <span class="theme-trigger__caret" aria-hidden="true">▾</span>
+    </button>
+    <div class="theme-menu" id="motion-menu" role="menu" hidden>
+      <button role="menuitem" type="button" data-transition-name="auto">Auto</button>
+      <button role="menuitem" type="button" data-transition-name="fade">Fade</button>
+      <button role="menuitem" type="button" data-transition-name="slide-h">Slide</button>
+      <button role="menuitem" type="button" data-transition-name="zoom">Zoom</button>
+      <button role="menuitem" type="button" data-transition-name="cut">Cut</button>
     </div>
   </div>
   <button class="action-btn action-btn--ghost" id="mode-toggle" type="button" aria-pressed="false">Present</button>
@@ -1028,6 +1044,7 @@ function setTheme(name) {
   themeMenu.querySelectorAll("[data-theme-name]").forEach(b => {
     b.setAttribute("aria-current", String(b.dataset.themeName === name));
   });
+  if (typeof applyTransition === "function") applyTransition();
 }
 
 function closeThemeMenu() {
@@ -1056,8 +1073,67 @@ document.addEventListener("keydown", e => {
   if (e.key === "Escape" && !themeMenu.hidden) { closeThemeMenu(); themeTrigger.focus(); }
 });
 
+const transitionLabels = { auto: "Auto", fade: "Fade", "slide-h": "Slide", zoom: "Zoom", cut: "Cut" };
+const themeDefaultTransition = {
+  terracotta: "fade",
+  carbon:     "slide-h",
+  berry:      "fade",
+  lab:        "slide-h",
+  mono:       "slide-h",
+  aurora:     "zoom",
+  brutalist:  "cut",
+  dusk:       "fade",
+};
+const motionTrigger = document.getElementById("motion-trigger");
+const motionMenu = document.getElementById("motion-menu");
+const motionCurrent = document.getElementById("motion-current");
+
+function applyTransition() {
+  const userPref = localStorage.getItem("deck-transition") || "auto";
+  const theme = document.documentElement.dataset.theme || "terracotta";
+  const effective = userPref === "auto" ? (themeDefaultTransition[theme] || "fade") : userPref;
+  document.documentElement.dataset.transition = effective;
+}
+
+function setTransitionPref(name) {
+  localStorage.setItem("deck-transition", name);
+  motionCurrent.textContent = transitionLabels[name] || name;
+  motionMenu.querySelectorAll("[data-transition-name]").forEach(b => {
+    b.setAttribute("aria-current", String(b.dataset.transitionName === name));
+  });
+  applyTransition();
+}
+
+function closeMotionMenu() {
+  motionMenu.hidden = true;
+  motionTrigger.setAttribute("aria-expanded", "false");
+}
+
+motionTrigger.addEventListener("click", () => {
+  const willOpen = motionMenu.hidden;
+  motionMenu.hidden = !willOpen;
+  motionTrigger.setAttribute("aria-expanded", String(willOpen));
+});
+
+motionMenu.addEventListener("click", e => {
+  const btn = e.target.closest("[data-transition-name]");
+  if (btn) { setTransitionPref(btn.dataset.transitionName); closeMotionMenu(); motionTrigger.focus(); }
+});
+
+document.addEventListener("click", e => {
+  if (!motionMenu.hidden && !motionTrigger.contains(e.target) && !motionMenu.contains(e.target)) {
+    closeMotionMenu();
+  }
+});
+
+document.addEventListener("keydown", e => {
+  if (e.key === "Escape" && !motionMenu.hidden) { closeMotionMenu(); motionTrigger.focus(); }
+});
+
 const saved = localStorage.getItem("deck-theme");
 setTheme(saved || "terracotta");
+const savedTransition = localStorage.getItem("deck-transition") || "auto";
+setTransitionPref(savedTransition);
 
 const modeToggle = document.getElementById("mode-toggle");
 
