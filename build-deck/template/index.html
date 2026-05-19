@@ -55,6 +55,66 @@
   --shadow:0 1px 0 rgba(0,0,0,.04), 0 18px 40px -18px rgba(0,0,0,.18);
   --display-font:var(--header-font);
 }
+[data-theme="mono"] {
+  --bg:#FFFFFF; --bg-soft:#F5F5F7; --card:#FFFFFF; --card-accent:#F5F5F7;
+  --primary:#00B8D4; --primary-soft:rgba(0,184,212,.10);
+  --accent:#FF3366;  --accent-soft:rgba(255,51,102,.10);
+  --text:#0A0A0B; --text-muted:#52525B; --text-subtle:#A1A1AA;
+  --divider:rgba(10,10,11,.10);
+  --shadow:0 1px 0 rgba(0,0,0,.04), 0 12px 28px -16px rgba(0,0,0,.18);
+  --display-font:var(--header-font);
+}
+[data-theme="aurora"] {
+  --bg:linear-gradient(135deg,#2A1B4A 0%,#1A3D52 100%);
+  --bg-soft:rgba(255,255,255,.04); --card:rgba(255,255,255,.06); --card-accent:rgba(255,255,255,.08);
+  --primary:#A78BFA; --primary-soft:rgba(167,139,250,.18);
+  --accent:#5EEAD4;  --accent-soft:rgba(94,234,212,.18);
+  --text:#F4F4F8; --text-muted:#C7C7D2; --text-subtle:#8E8EA1;
+  --divider:rgba(255,255,255,.14);
+  --shadow:0 8px 32px -8px rgba(0,0,0,.4);
+  --display-font:var(--header-font);
+}
+[data-theme="aurora"] body { background: var(--bg); }
+[data-theme="aurora"] .slide,
+[data-theme="aurora"] .pillar,
+[data-theme="aurora"] .arch-card,
+[data-theme="aurora"] .c-card,
+[data-theme="aurora"] .q-card,
+[data-theme="aurora"] .flow__card,
+[data-theme="aurora"] .phase {
+  background: rgba(255,255,255,.06);
+  backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+  border-color: rgba(255,255,255,.14);
+}
+[data-theme="brutalist"] {
+  --bg:#FFFFFF; --bg-soft:#FFFFFF; --card:#FFFFFF; --card-accent:#FFFFFF;
+  --primary:#CCFF00; --primary-soft:rgba(204,255,0,.20);
+  --accent:#000000;  --accent-soft:rgba(0,0,0,.06);
+  --text:#000000; --text-muted:#1A1A1A; --text-subtle:#666666;
+  --divider:#000000;
+  --shadow:none;
+  --radius:0;
+  --display-font:var(--header-font);
+}
+[data-theme="brutalist"] .slide { border-width:2px; }
+[data-theme="brutalist"] .pillar,
+[data-theme="brutalist"] .arch-card,
+[data-theme="brutalist"] .c-card,
+[data-theme="brutalist"] .q-card,
+[data-theme="brutalist"] .flow__card,
+[data-theme="brutalist"] .phase { border-width:2px; border-radius:0; box-shadow:none; }
+[data-theme="brutalist"] .objective-bar,
+[data-theme="brutalist"] .phase__deps,
+[data-theme="brutalist"] .cards-footer--emphasis { border-radius:0; }
+[data-theme="dusk"] {
+  --bg:#1A1422; --bg-soft:#241A2E; --card:#2A1F35; --card-accent:#332642;
+  --primary:#C4B5FD; --primary-soft:rgba(196,181,253,.14);
+  --accent:#FCA5A5;  --accent-soft:rgba(252,165,165,.14);
+  --text:#F4F0F8; --text-muted:#B8AECC; --text-subtle:#857794;
+  --divider:rgba(255,255,255,.08);
+  --shadow:0 0 0 1px rgba(255,255,255,.04), 0 24px 60px -20px rgba(0,0,0,.6);
+  --display-font:var(--serif-font);
+}
 
 * { box-sizing: border-box; }
 html, body { margin: 0; padding: 0; }
@@ -376,6 +436,10 @@ body {
       <button role="menuitem" type="button" data-theme-name="carbon">Carbon</button>
       <button role="menuitem" type="button" data-theme-name="berry">Berry</button>
       <button role="menuitem" type="button" data-theme-name="lab">Lab</button>
+      <button role="menuitem" type="button" data-theme-name="mono">Mono</button>
+      <button role="menuitem" type="button" data-theme-name="aurora">Aurora</button>
+      <button role="menuitem" type="button" data-theme-name="brutalist">Brutalist</button>
+      <button role="menuitem" type="button" data-theme-name="dusk">Dusk</button>
     </div>
   </div>
   <span class="topbar__sep" aria-hidden="true"></span>
