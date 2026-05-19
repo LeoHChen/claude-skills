@@ -1,6 +1,6 @@
 ---
 name: build-deck
-description: Build a slide deck using the user's standard pattern — content lives in content.md (YAML stream), rendering is a themed website with a topbar theme switcher (Terracotta, Carbon, Berry, Lab). Use when the user asks to build, design, draft, or revise a slide deck or presentation in any project. Each deck lives in its own subfolder with content.md, index.html, and sync.js. Avoid PowerPoint/PPTX unless the user explicitly asks.
+description: Build a slide deck using the user's standard pattern — content lives in content.md (YAML stream), rendering is a themed website with a dual-mode (Review / Present) renderer, 8 themes (Terracotta, Carbon, Berry, Lab, Mono, Aurora, Brutalist, Dusk), keyboard nav in Present mode, top progress hairline, on-slide page numbers. Use when the user asks to build, design, draft, or revise a slide deck or presentation in any project. Each deck lives in its own subfolder with content.md, index.html, and sync.js. Avoid PowerPoint/PPTX unless the user explicitly asks.
 ---
 
 # Build a Deck (User's Standard Pattern)
@@ -42,18 +42,47 @@ See `~/.claude/skills/build-deck/template/content.md` for an example covering ev
 
 ## Themes (do not invent new ones casually)
 
-Built into `index.html` as CSS-variable swaps. User picks via topbar. Markup never changes.
+Built into `index.html` as CSS-variable swaps. User picks from a topbar dropdown. Markup never changes.
+
+- **Terracotta** — warm cream + terracotta + forest green; serif display. Default. Warm/strategic.
+- **Carbon** — premium dark with electric lime + warm orange. Technical/fundraising.
+- **Berry** — cream + berry + dusty rose; serif display. Editorial.
+- **Lab** — minimal off-white with magenta + mint-teal. Product/clinical.
+- **Mono** — pure white + cyan accents; sans display, hairline borders. Modern tech/product.
+- **Aurora** — violet→teal gradient bg with glass cards; lavender + mint accents. Vision/future decks.
+- **Brutalist** — stark white + black + chartreuse; thick 2px rules, sharp corners, no shadows. Manifestos, conviction pieces.
+- **Dusk** — plum-dark + lavender + peach; serif display. Premium dark without navy.
+
+**Never default to deep blue** — the user has explicitly rejected that aesthetic. Pick a default that matches the deck's mood.
+
+## Presentation Mode
+
+The deck has two modes, toggled in the topbar:
+
+- **Review** (default for editing) — all slides stacked vertically. Use for drafting and review.
+- **Present** — one slide fills the viewport. Use for delivery.
+
+State persists per browser via `localStorage.deck-mode`.
+
+### Present mode chrome
+
+- **Progress hairline** at the top of the viewport. Width reflects (current+1)/total.
+- **Floating nav bar** at bottom-center: `‹ Prev   NN / MM   Next ›`. Fades after 2s of mouse idle, reappears on movement.
+- **Page numbers** on the bottom-right of every slide (visible in both modes; survives PDF export).
+
+### Keyboard shortcuts (Present mode)
+
+| Key | Action |
+|---|---|
+| `→` / `Space` | Next slide |
+| `←` | Previous slide |
+| `Home` | Jump to first slide |
+| `End` | Jump to last slide |
+| `Esc` | Exit to Review mode |
 
 ## Export to PDF
 
-The topbar has an **Export PDF** button that calls `window.print()`. The `@media print` CSS sets `@page` to 16:9 (13.333in × 7.5in), one slide per page, with `print-color-adjust: exact` so backgrounds and accents render. User picks "Save as PDF" in the print dialog.
-
-- **Terracotta** — warm cream + terracotta + forest green; serif display. Default.
-- **Carbon** — premium dark with electric lime + warm orange.
-- **Berry** — cream + berry + dusty rose; serif display.
-- **Lab** — minimal off-white with magenta + mint-teal.
-
-**Never default to deep blue** — the user has explicitly rejected that aesthetic. Pick a default that matches the deck's mood (Terracotta for warm/strategic, Carbon for technical/fundraising, Berry for editorial, Lab for product/clinical).
+The topbar has an **Export PDF** button that calls `window.print()`. The `@media print` CSS sets `@page` to 16:9 (13.333in × 7.5in), one slide per page, with `print-color-adjust: exact` so backgrounds and accents render. User picks "Save as PDF" in the print dialog. Works from both Review and Present mode (Present mode temporarily switches to Review for the print job, then restores).
 
 ## Workflow when the user asks for a deck
 
