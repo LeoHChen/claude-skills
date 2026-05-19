@@ -264,14 +264,20 @@ html[data-mode="present"] body { overflow: hidden; }
 html[data-mode="present"] .deck {
   padding: 24px;
   gap: 0;
-  min-height: calc(100vh - 60px);
+  display: grid;
+  place-items: center;
+  min-height: 100vh;
 }
-html[data-mode="present"] .slide { display: none; }
-html[data-mode="present"] .slide.is-current { display: block; }
 html[data-mode="present"] .slide {
-  max-width: min(1280px, 100%);
+  grid-area: 1 / 1;
   width: 100%;
+  max-width: min(1280px, 100%);
+  display: none;
 }
+html[data-mode="present"] .slide.is-current,
+html[data-mode="present"] .slide.is-exiting { display: block; }
+html[data-mode="present"] .slide.is-current { z-index: 2; }
+html[data-mode="present"] .slide.is-exiting { z-index: 1; }
 
 .present-nav {
   position: fixed; left: 50%; transform: translateX(-50%);
