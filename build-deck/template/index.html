@@ -17,6 +17,15 @@
   --mono-font:   "JetBrains Mono", ui-monospace, monospace;
   --radius: 14px;
   --transition: 280ms cubic-bezier(.2,.7,.2,1);
+  --entrance-anim: deck-enter-up;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
 
 [data-theme="terracotta"] {
