@@ -228,6 +228,19 @@ html:not([data-mode="present"]) .present-nav { display: none !important; }
   font: 500 12px var(--mono-font); color: var(--text-subtle); letter-spacing: .08em;
   min-width: 64px; text-align: center;
 }
+
+.progress {
+  position: fixed; top: 0; left: 0; right: 0; height: 2px;
+  background: transparent; z-index: 25;
+  pointer-events: none;
+}
+.progress::after {
+  content: ""; display: block; height: 100%;
+  width: var(--progress, 0%);
+  background: var(--primary);
+  transition: width 220ms cubic-bezier(.2,.7,.2,1);
+}
+html:not([data-mode="present"]) .progress { display: none; }
 .slide__tag { font: 700 11px/1 var(--header-font); letter-spacing: .28em; text-transform: uppercase; color: var(--primary); }
 .slide__title {
   font-family: var(--display-font); font-weight: 800;
@@ -496,6 +509,8 @@ html:not([data-mode="present"]) .present-nav { display: none !important; }
   <span class="topbar__sep" aria-hidden="true"></span>
   <button class="action-btn" id="export-pdf" title="Opens the print dialog — choose &quot;Save as PDF&quot;">Export PDF</button>
 </header>
+
+<div class="progress" id="progress" aria-hidden="true"></div>
 
 <main class="deck" id="deck">
   <div style="padding:120px;color:var(--text-muted);text-align:center;">Loading <code>content.md</code>…</div>
@@ -823,6 +838,8 @@ function updateChrome() {
   if (total === 0) return;
   const pad = String(total).length;
   navCount.textContent = `${String(currentIndex + 1).padStart(pad, "0")} / ${String(total).padStart(pad, "0")}`;
+  const pct = ((currentIndex + 1) / total) * 100;
+  document.getElementById("progress").style.setProperty("--progress", `${pct}%`);
 }
 
 document.addEventListener("keydown", e => {
