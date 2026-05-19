@@ -192,6 +192,9 @@
 [data-theme="carbon"] .slide::before { width: 3px; }
 [data-theme="carbon"] .slide__tag { letter-spacing: .42em; }
 
+/* Brutalist + Lab opt out of the entrance cascade (deliberately static) */
+[data-theme="brutalist"], [data-theme="lab"] { --entrance-anim: none; }
+
 /* Terracotta: keep current (the default look-and-feel anchor) */
 
 * { box-sizing: border-box; }
