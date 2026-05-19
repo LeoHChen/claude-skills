@@ -192,6 +192,13 @@ body {
   letter-spacing: -0.01em; margin: 14px 0 14px; color: var(--text);
 }
 .slide__subtitle { font-size: 17px; line-height: 1.5; color: var(--text-muted); max-width: 1020px; font-style: italic; }
+.slide__pageno {
+  position: absolute; right: 28px; bottom: 22px;
+  font: 500 10.5px var(--mono-font); letter-spacing: .12em;
+  color: var(--text-subtle);
+  z-index: 2;
+  user-select: none;
+}
 
 .title-slide__main {
   font-family: var(--display-font); font-weight: 900;
@@ -616,6 +623,22 @@ function renderSlides(docs) {
   return slides.map(d => `<section class="slide slide--${esc(d.type)}">${renderers[d.type](d)}</section>`).join("");
 }
 
+function injectPageNumbers() {
+  const slides = document.querySelectorAll("#deck .slide");
+  const total = slides.length;
+  if (total === 0) return;
+  const pad = String(total).length;
+  slides.forEach((slide, i) => {
+    let el = slide.querySelector(".slide__pageno");
+    if (!el) {
+      el = document.createElement("div");
+      el.className = "slide__pageno";
+      slide.appendChild(el);
+    }
+    el.textContent = `${String(i + 1).padStart(pad, "0")} / ${String(total).padStart(pad, "0")}`;
+  });
+}
+
 async function loadContent() {
   try {
     const res = await fetch("content.md", { cache: "no-store" });
@@ -647,6 +670,7 @@ async function load() {
     return;
   }
   renderInto(deck, renderSlides(docs));
+  injectPageNumbers();
   if (source === "inline") console.info("Loaded inline content (run `node sync.js` after editing content.md).");
 }
 
