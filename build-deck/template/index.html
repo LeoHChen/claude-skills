@@ -190,6 +190,19 @@ body {
   transition: background var(--transition), border-color var(--transition);
 }
 .slide::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 6px; background: var(--primary); }
+
+html[data-mode="present"] body { overflow: hidden; }
+html[data-mode="present"] .deck {
+  padding: 24px;
+  gap: 0;
+  min-height: calc(100vh - 60px);
+}
+html[data-mode="present"] .slide { display: none; }
+html[data-mode="present"] .slide.is-current { display: block; }
+html[data-mode="present"] .slide {
+  max-width: min(1280px, 100%);
+  width: 100%;
+}
 .slide__tag { font: 700 11px/1 var(--header-font); letter-spacing: .28em; text-transform: uppercase; color: var(--primary); }
 .slide__title {
   font-family: var(--display-font); font-weight: 800;
@@ -677,6 +690,7 @@ async function load() {
   }
   renderInto(deck, renderSlides(docs));
   injectPageNumbers();
+  showSlide(currentIndex);
   if (source === "inline") console.info("Loaded inline content (run `node sync.js` after editing content.md).");
 }
 
@@ -733,11 +747,32 @@ function setMode(mode) {
   localStorage.setItem("deck-mode", mode);
   modeToggle.textContent = mode === "present" ? "Review" : "Present";
   modeToggle.setAttribute("aria-pressed", String(mode === "present"));
+  if (mode === "present") {
+    showSlide(currentIndex);
+  }
 }
 
 modeToggle.addEventListener("click", () => {
   setMode(document.documentElement.dataset.mode === "present" ? "review" : "present");
 });
+
+let currentIndex = 0;
+
+function getSlides() { return document.querySelectorAll("#deck .slide"); }
+function getTotal() { return getSlides().length; }
+
+function showSlide(idx) {
+  const slides = getSlides();
+  const total = slides.length;
+  if (total === 0) return;
+  currentIndex = Math.max(0, Math.min(total - 1, idx));
+  slides.forEach((s, i) => s.classList.toggle("is-current", i === currentIndex));
+  updateChrome();
+}
+
+function updateChrome() {
+  // Filled in by Tasks 8 (nav counter) and 9 (progress bar).
+}
 
 setMode(localStorage.getItem("deck-mode") || "review");
 
