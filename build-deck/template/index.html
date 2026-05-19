@@ -774,6 +774,24 @@ function updateChrome() {
   // Filled in by Tasks 8 (nav counter) and 9 (progress bar).
 }
 
+document.addEventListener("keydown", e => {
+  if (document.documentElement.dataset.mode !== "present") return;
+  if (e.target.matches("input, textarea, [contenteditable], [contenteditable='true']")) return;
+  switch (e.key) {
+    case "ArrowLeft":
+      showSlide(currentIndex - 1); e.preventDefault(); break;
+    case "ArrowRight":
+    case " ":
+      showSlide(currentIndex + 1); e.preventDefault(); break;
+    case "Home":
+      showSlide(0); e.preventDefault(); break;
+    case "End":
+      showSlide(getTotal() - 1); e.preventDefault(); break;
+    case "Escape":
+      setMode("review"); e.preventDefault(); break;
+  }
+});
+
 setMode(localStorage.getItem("deck-mode") || "review");
 
 const exportBtn = document.getElementById("export-pdf");
