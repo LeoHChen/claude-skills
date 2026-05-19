@@ -465,7 +465,7 @@ html:not([data-mode="present"]) .progress { display: none; }
 @media print {
   @page { size: 13.333in 7.5in; margin: 0; }
   html, body { background: var(--bg); }
-  .topbar { display: none; }
+  .topbar, .present-nav, .progress { display: none !important; }
   .deck { padding: 0; gap: 0; display: block; }
   .slide {
     page-break-after: always;
@@ -863,7 +863,20 @@ document.addEventListener("keydown", e => {
 setMode(localStorage.getItem("deck-mode") || "review");
 
 const exportBtn = document.getElementById("export-pdf");
-if (exportBtn) exportBtn.addEventListener("click", () => window.print());
+if (exportBtn) {
+  exportBtn.addEventListener("click", () => {
+    const wasPresent = document.documentElement.dataset.mode === "present";
+    if (wasPresent) {
+      document.documentElement.dataset.mode = "review";
+      const restore = () => {
+        document.documentElement.dataset.mode = "present";
+        window.removeEventListener("afterprint", restore);
+      };
+      window.addEventListener("afterprint", restore);
+    }
+    window.print();
+  });
+}
 
 load();
 </script>
