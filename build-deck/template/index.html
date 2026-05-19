@@ -76,15 +76,34 @@ body {
 }
 .topbar__title { font-family: var(--header-font); font-weight: 700; font-size: 14px; letter-spacing: .04em; color: var(--text); }
 .topbar__title em { color: var(--text-subtle); font-style: normal; font-weight: 400; margin-left: 8px; }
-.topbar__themes { display: flex; gap: 6px; }
-.theme-btn {
+.topbar__theme { position: relative; }
+.theme-trigger {
+  display: inline-flex; align-items: center; gap: 8px;
   font: 600 11px var(--header-font); letter-spacing: .08em; text-transform: uppercase;
   padding: 8px 14px; border-radius: 999px;
-  border: 1px solid var(--divider); background: transparent; color: var(--text-muted);
+  border: 1px solid var(--divider); background: transparent; color: var(--text);
   cursor: pointer; transition: all 160ms ease;
 }
-.theme-btn:hover { color: var(--text); border-color: var(--text-subtle); }
-.theme-btn[aria-pressed="true"] { background: var(--text); color: var(--bg); border-color: var(--text); }
+.theme-trigger:hover { border-color: var(--text-subtle); }
+.theme-trigger__label { color: var(--text-subtle); }
+.theme-trigger__current { color: var(--text); }
+.theme-trigger__caret { font-size: 9px; color: var(--text-subtle); }
+.theme-menu {
+  position: absolute; top: calc(100% + 8px); right: 0; z-index: 20;
+  background: var(--card);
+  border: 1px solid var(--divider); border-radius: 12px;
+  box-shadow: var(--shadow);
+  padding: 6px; min-width: 180px;
+  display: flex; flex-direction: column; gap: 2px;
+}
+.theme-menu[hidden] { display: none; }
+.theme-menu button {
+  font: 500 13px var(--body-font); text-align: left;
+  padding: 9px 12px; border: 0; background: transparent; color: var(--text);
+  border-radius: 8px; cursor: pointer; transition: background 120ms ease;
+}
+.theme-menu button:hover { background: var(--bg-soft); }
+.theme-menu button[aria-current="true"] { color: var(--primary); font-weight: 600; }
 .topbar__sep { width: 1px; height: 22px; background: var(--divider); margin: 0 6px; }
 .action-btn {
   font: 600 11px var(--header-font); letter-spacing: .08em; text-transform: uppercase;
@@ -346,12 +365,19 @@ body {
 
 <header class="topbar">
   <div class="topbar__title">DECK <em>· Subtitle</em></div>
-  <nav class="topbar__themes" id="themes">
-    <button class="theme-btn" data-theme-name="terracotta">Terracotta</button>
-    <button class="theme-btn" data-theme-name="carbon">Carbon</button>
-    <button class="theme-btn" data-theme-name="berry">Berry</button>
-    <button class="theme-btn" data-theme-name="lab">Lab</button>
-  </nav>
+  <div class="topbar__theme">
+    <button class="theme-trigger" id="theme-trigger" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="theme-menu">
+      <span class="theme-trigger__label">Theme</span>
+      <span class="theme-trigger__current" id="theme-current">Terracotta</span>
+      <span class="theme-trigger__caret" aria-hidden="true">▾</span>
+    </button>
+    <div class="theme-menu" id="theme-menu" role="menu" hidden>
+      <button role="menuitem" type="button" data-theme-name="terracotta">Terracotta</button>
+      <button role="menuitem" type="button" data-theme-name="carbon">Carbon</button>
+      <button role="menuitem" type="button" data-theme-name="berry">Berry</button>
+      <button role="menuitem" type="button" data-theme-name="lab">Lab</button>
+    </div>
+  </div>
   <span class="topbar__sep" aria-hidden="true"></span>
   <button class="action-btn" id="export-pdf" title="Opens the print dialog — choose &quot;Save as PDF&quot;">Export PDF</button>
 </header>
@@ -560,17 +586,49 @@ async function load() {
   if (source === "inline") console.info("Loaded inline content (run `node sync.js` after editing content.md).");
 }
 
+const themeLabels = {
+  terracotta: "Terracotta", carbon: "Carbon", berry: "Berry", lab: "Lab",
+  mono: "Mono", aurora: "Aurora", brutalist: "Brutalist", dusk: "Dusk"
+};
+const themeTrigger = document.getElementById("theme-trigger");
+const themeMenu = document.getElementById("theme-menu");
+const themeCurrent = document.getElementById("theme-current");
+
 function setTheme(name) {
   document.documentElement.dataset.theme = name;
   localStorage.setItem("deck-theme", name);
-  document.querySelectorAll("[data-theme-name]").forEach(b => {
-    b.setAttribute("aria-pressed", String(b.dataset.themeName === name));
+  themeCurrent.textContent = themeLabels[name] || name;
+  themeMenu.querySelectorAll("[data-theme-name]").forEach(b => {
+    b.setAttribute("aria-current", String(b.dataset.themeName === name));
   });
 }
-document.getElementById("themes").addEventListener("click", e => {
-  const btn = e.target.closest("[data-theme-name]");
-  if (btn) setTheme(btn.dataset.themeName);
+
+function closeThemeMenu() {
+  themeMenu.hidden = true;
+  themeTrigger.setAttribute("aria-expanded", "false");
+}
+
+themeTrigger.addEventListener("click", () => {
+  const willOpen = themeMenu.hidden;
+  themeMenu.hidden = !willOpen;
+  themeTrigger.setAttribute("aria-expanded", String(willOpen));
 });
+
+themeMenu.addEventListener("click", e => {
+  const btn = e.target.closest("[data-theme-name]");
+  if (btn) { setTheme(btn.dataset.themeName); closeThemeMenu(); themeTrigger.focus(); }
+});
+
+document.addEventListener("click", e => {
+  if (!themeMenu.hidden && !themeTrigger.contains(e.target) && !themeMenu.contains(e.target)) {
+    closeThemeMenu();
+  }
+});
+
+document.addEventListener("keydown", e => {
+  if (e.key === "Escape" && !themeMenu.hidden) { closeThemeMenu(); themeTrigger.focus(); }
+});
+
 const saved = localStorage.getItem("deck-theme");
 setTheme(saved || "terracotta");
 
