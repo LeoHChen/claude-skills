@@ -1,6 +1,6 @@
 ---
 name: write-doc
-description: Write or update a markdown document that ships as a themed PDF. Source is always .md; rendering is pandoc + headless Chromium driven by `make pdf DOC=<name>`. Use when the user asks to write, draft, revise, or update any prose document — design doc, RFC, memo, white paper, technical spec, brief, exec summary — that's likely to be circulated as a PDF. Themes available: terracotta, carbon, berry, lab. Don't use Word, Pages, Google Docs, or LaTeX directly.
+description: Write or update a markdown document that ships from a Markdown source into themed HTML and PDF outputs. Source is always .md; rendering is make-driven via `make sync DOC=<name>` for `index.html` and `make pdf DOC=<name>` for the printable PDF. Use when the user asks to write, draft, revise, or update any prose document — design doc, RFC, memo, white paper, technical spec, brief, exec summary — that's likely to be circulated as a PDF. Themes available: terracotta, carbon, berry, lab. Don't use Word, Pages, Google Docs, or LaTeX directly.
 ---
 
 # Writing PDF-renderable docs (User's Standard Pattern)
@@ -12,7 +12,8 @@ as a PDF, follow this pattern.
 
 ```
 {project}/
-├── Makefile              # provides `make pdf DOC=<name> [THEME=<name>]`
+├── Makefile              # provides `make sync DOC=<name>` and `make pdf DOC=<name>`
+├── index.html            # generated preview, baked from {doc-name}.md
 ├── themes/
 │   ├── terracotta.css    # warm cream + terracotta + forest (default)
 │   ├── carbon.css        # white page, sharp sans, lime accent
@@ -26,14 +27,20 @@ as a PDF, follow this pattern.
 1. **Write the doc** as `{doc-name}.md`. Plain Markdown. Use `---` for
    horizontal rules between major sections; the renderer styles them
    tastefully.
-2. **Render to PDF** with the Makefile target:
+2. **Sync the HTML preview** with the Makefile target:
+   ```bash
+   make sync DOC=my-doc                 # bakes my-doc.md into index.html
+   make sync DOC=my-doc THEME=carbon    # preview under a different theme
+   ```
+3. **Render to PDF** with the Makefile target:
    ```bash
    make pdf DOC=my-doc                  # uses default theme (terracotta)
    make pdf DOC=my-doc THEME=carbon     # explicit theme
    make themes                          # list available themes
    ```
-3. The output is `{doc-name}.pdf` next to the source. Open it, share it,
-   or commit it depending on the project's convention.
+4. The outputs are `index.html` for browser review and `{doc-name}.pdf`
+   for sharing. Open them, share them, or commit them depending on the
+   project's convention.
 
 ## Themes (same names as the build-deck skill; tuned for print)
 
@@ -61,8 +68,9 @@ cp -R ~/.claude/skills/write-doc/template/* {project}/
 
 ## Adding the doc target to an existing Makefile
 
-If the project already has a Makefile, copy just the `pdf:`, `themes:`,
-and the variable block from `template/Makefile`. Also copy `themes/`.
+If the project already has a Makefile, copy the variable block plus the
+`sync:`, `pdf:`, and `themes:` targets from `template/Makefile`. Also
+copy `themes/`.
 
 ## Adding a new theme
 
@@ -77,6 +85,8 @@ difference is fonts, colors, and a couple of accent choices.
   formats. If the user gives you a non-MD source, convert to MD first.
 - **PDF is generated, not edited.** Never edit the PDF directly. The
   `.md` is canonical.
+- **`index.html` is generated, not edited.** Regenerate it from `.md`
+  via `make sync DOC=<name>` whenever content changes.
 - **Themes are CSS-only differences** — same Markdown renders under any
   theme. Don't put per-theme content in the .md.
 - **Page size is US Letter** by default. International users can

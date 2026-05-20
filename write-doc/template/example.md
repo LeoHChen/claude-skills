@@ -59,5 +59,5 @@ If your doc has open design questions, structure them like this:
 
 ---
 
-*This doc renders to PDF via `make pdf DOC=example`. Pick a theme with*
+*This doc syncs to HTML via `make sync DOC=example` and renders to PDF via `make pdf DOC=example`. Pick a theme with*
 *`THEME=carbon` (or `berry`, `lab`, `terracotta`).*
