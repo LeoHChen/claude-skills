@@ -13,8 +13,8 @@ Each deck is one self-contained subfolder:
 
 ```
 {project}/
-├── Makefile               # if present, prefer `make` targets
 ├── {deck-name}/
+│   ├── Makefile           # `make sync` bakes content.md into index.html
 │   ├── content.md         # YAML stream — single source of truth
 │   ├── index.html         # themed renderer (4 themes)
 │   └── sync.js            # bakes content.md into the inline block
@@ -122,16 +122,16 @@ The topbar has an **Export PDF** button that calls `window.print()`. The `@media
 ## Workflow when the user asks for a deck
 
 1. **Confirm scope** in one short sentence: subfolder name, slide count, source material. Don't over-clarify.
-2. **Scaffold the folder.** If a Makefile exists at the project root, run `make new NAME=<deck-name>`. Otherwise: `mkdir <deck-name> && cp ~/.claude/skills/build-deck/template/* <deck-name>/`.
+2. **Scaffold the folder.** Create `{deck-name}/` and copy `~/.claude/skills/build-deck/template/*` into it. The copied folder should always include its own `Makefile`.
 3. **Edit `content.md`.** Write all slides. Keep copy tight — slides are 16:9 with breathing room; trim if it doesn't fit.
 4. **Customize the topbar title** in `index.html` (the `<title>` tag, the `topbar__title` text, and the `localStorage` key if you want per-deck theme persistence).
-5. **Bake the content.** `make sync DECK=<deck-name>` from the project root, or `cd <deck-name> && node sync.js`.
+5. **Bake the content.** `cd <deck-name> && make sync`. Only fall back to `node sync.js` if `make` is unavailable.
 6. **Tell the user it's in the preview panel** and how to switch themes.
 
 ## Editing an existing deck
 
 - Edit `content.md` only — never edit the inline `<script type="text/yaml" id="content-data">` block by hand. That's a baked copy maintained by `sync.js`.
-- After every content change run `node sync.js` (or `make sync DECK=...`).
+- After every content change run `make sync`.
 - For visual tweaks (spacing, type), edit `index.html` directly — but prefer adjusting CSS variables in one theme block over redesigning markup.
 
 ## Hard rules
