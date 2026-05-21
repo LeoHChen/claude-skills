@@ -3,7 +3,7 @@
 Personal Claude Code skills. Each subdirectory is a skill that can be loaded by
 the `Skill` tool when working with Claude Code.
 
-**Current release: [v1.1.0](https://github.com/LeoHChen/claude-skills/releases/tag/v1.1.0)** — see "What's new" below or the full [release notes](https://github.com/LeoHChen/claude-skills/releases/tag/v1.1.0).
+**Current release: [v1.2.0](https://github.com/LeoHChen/claude-skills/releases/tag/v1.2.0)** — see "What's new" below or the full [release notes](https://github.com/LeoHChen/claude-skills/releases/tag/v1.2.0).
 
 ## Skills
 
@@ -12,6 +12,20 @@ the `Skill` tool when working with Claude Code.
 | [`build-deck`](build-deck/) | Themed website-rendered slide deck from a `content.md` YAML stream. **Dual-mode renderer** — Review (scroll) for editing, Present (one slide fills viewport) for delivery. Present mode adds a top progress hairline, floating bottom nav (`‹ Prev   NN / MM   Next ›`, fades on idle), and keyboard nav (`← / → / Space / Home / End / Esc`). On-slide page numbers visible in both modes and in PDF export. **Self-contained scaffold** — each deck folder now ships with its own `Makefile`, and `make sync` bakes `content.md` into `index.html`. **8 themes** with distinct typography, slide chrome, and motion signatures: Terracotta, Carbon, Berry, Lab, Mono, Aurora, Brutalist, Dusk. **Motion in Present mode** — slide transitions (Fade / Slide / Zoom / Cut, per-theme defaults, user-override topbar selector), element entrance cascade, per-theme background motion (Aurora gradient drift, Mono pulse, Carbon scanline, Berry vignette breathe, Terracotta paper grain). All CSS-only, gated by `prefers-reduced-motion`. Slide types: `title`, `architecture`, `cards`, `flow`, `roadmap`, `questions`. Export-PDF works from both modes. |
 | [`write-doc`](write-doc/) | Write a Markdown document and render it to themed HTML and PDF via `make sync DOC=<name> [THEME=<theme>]` and `make pdf DOC=<name> [THEME=<theme>]`. Themes: Terracotta, Carbon, Berry, Lab — tuned for print. Pandoc + headless Chromium pipeline (no LaTeX). |
 | [`nano-banana`](nano-banana/) | Generate or edit images via Google's Gemini "Nano Banana" image-model family. Stdlib-only Python CLI; defaults to `gemini-3.1-flash-image-preview`, with Pro tier via `--model nano-banana-pro-preview` and stable fallback `gemini-2.5-flash-image`. Supports text-to-image, image edit, and multi-reference composition (repeat `--input`). Requires `GEMINI_API_KEY`. |
+
+## What's new in v1.2.0
+
+**`nano-banana`** — new skill that wraps Google's Gemini image-generation API (Nano Banana family) so Claude / Claude Code can generate or edit images programmatically from any session.
+
+- Stdlib-only Python CLI — no `requests`, no `google-genai` dependency.
+- Defaults to `gemini-3.1-flash-image-preview` (newest flash-tier image model). Pro tier via `--model nano-banana-pro-preview`; stable fallback `gemini-2.5-flash-image`.
+- Supports text-to-image, image edit, and multi-reference composition (repeat `--input ref.png`).
+- Documented model catalog + the `gemini-3.5-flash` text-only gotcha (returns `NO_IMAGE`).
+- Requires `GEMINI_API_KEY` in env (get one at https://aistudio.google.com/apikey).
+
+Issue #11 / PR #12.
+
+Full notes: [v1.2.0 release](https://github.com/LeoHChen/claude-skills/releases/tag/v1.2.0).
 
 ## What's new in v1.1.0
 
