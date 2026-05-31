@@ -16,7 +16,7 @@ Each deck is one self-contained subfolder:
 ├── {deck-name}/
 │   ├── Makefile           # `make sync` bakes content.md into index.html
 │   ├── content.md         # YAML stream — single source of truth
-│   ├── index.html         # themed renderer (4 themes)
+│   ├── index.html         # themed renderer (8 themes)
 │   └── sync.js            # bakes content.md into the inline block
 └── {another-deck}/        # one folder per deck
 ```
@@ -35,8 +35,9 @@ Available slide types:
 | `architecture` | two-card comparison | `cards[2]` each with `tag`, `accent`, `title`, `function_*`, `challenge_*` |
 | `cards` | N-up grid (principles, user classes, action items) | `columns: 2|3`, optional `dense: true`, `cards[]` with `num`, `title`, `role`, `body`. Optional `footer` and `footer_emphasis: true` |
 | `flow` | horizontal pipeline (frameworks, state machines) | `nodes[4-5]` each with `letter`, `name`, `desc`, optional `tag` |
-| `roadmap` | 3-phase timeline with dependencies block | `phases[3]` with `date`, `status`, `title`, `objective`, `subnets`, `deps_label`, `deps`. Plus `primary_objective`, `phase1_metrics` |
+| `roadmap` | 3-phase timeline with dependencies block | `phases[3]` with `date`, `status`, `title`, `objective`, `scope`, `deps_label`, `deps`. Plus `primary_objective`, `phase1_metrics` |
 | `questions` | 3×2 grid of open-question cards | `subtitle`, optional `note` (rendered as a pill), `questions[]` with `num`, `headline`, `body` |
+| `proscons` | trade-off / decision — pros vs cons | `pros[]`, `cons[]`; optional `pros_label`, `cons_label`, `footer`. Pros render in the **light** card (top), cons in the **dark** card (bottom) |
 
 See `~/.claude/skills/build-deck/template/content.md` for an example covering every type.
 
@@ -137,6 +138,7 @@ The topbar has an **Export PDF** button that calls `window.print()`. The `@media
 ## Hard rules
 
 - `content.md` is the single source of truth. Never inline content as canonical.
-- Don't add a fifth theme casually. If the user asks for a custom theme, add it as a new `[data-theme="..."]` block alongside the existing four.
+- Don't add a ninth theme casually. If the user asks for a custom theme, add it as a new `[data-theme="..."]` block alongside the existing eight.
 - Every slide must fit 16:9 with breathing room. If a section feels cramped, trim copy or split the slide.
+- **Whenever the deck presents a trade-off — pros and cons, benefits and risks, for and against — use the `proscons` slide type, never a plain bulleted list.** Pros go in the light card (top), cons in the dark card (bottom) so the contrast is visually unmistakable. The tonal split is theme-aware (driven by `--pc-*` CSS variables), so it adapts across all eight themes.
 - Use the `Skill` tool to invoke this skill from inside a conversation; don't paraphrase the workflow when you can just follow it.

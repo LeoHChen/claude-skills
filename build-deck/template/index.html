@@ -18,6 +18,16 @@
   --radius: 14px;
   --transition: 280ms cubic-bezier(.2,.7,.2,1);
   --entrance-anim: deck-enter-up;
+  /* Pros/cons tonal contrast — pro = light raised panel, con = inverted dark panel.
+     Defaults below resolve per theme; dark/glass/brutalist themes override further down. */
+  --pc-pro-bg: var(--card);
+  --pc-pro-ink: var(--text);
+  --pc-pro-sub: var(--text-muted);
+  --pc-pro-accent: var(--primary);
+  --pc-con-bg: var(--text);
+  --pc-con-ink: var(--bg);
+  --pc-con-sub: color-mix(in srgb, var(--bg), transparent 40%);
+  --pc-con-accent: var(--accent);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -158,6 +168,26 @@
   --shadow:0 0 0 1px rgba(255,255,255,.04), 0 24px 60px -20px rgba(0,0,0,.6);
   --display-font:var(--serif-font);
 }
+
+/* ===== Pros/Cons tonal contrast — dark, glass & brutalist overrides ===== */
+[data-theme="carbon"] {
+  --pc-pro-bg:#F4F4F2; --pc-pro-ink:#16161A; --pc-pro-sub:#5C5C62; --pc-pro-accent:#3F7A00;
+  --pc-con-bg:#000000; --pc-con-ink:#F2F2F2; --pc-con-sub:#8E8E92; --pc-con-accent:#B6FF5C;
+}
+[data-theme="dusk"] {
+  --pc-pro-bg:#F4F0F8; --pc-pro-ink:#241A2E; --pc-pro-sub:#6B5A78; --pc-pro-accent:#5B3FA0;
+  --pc-con-bg:#0F0A16; --pc-con-ink:#F4F0F8; --pc-con-sub:#9A8FAE; --pc-con-accent:#FCA5A5;
+}
+[data-theme="aurora"] {
+  --pc-pro-bg:rgba(255,255,255,.16); --pc-pro-ink:#F7F7FB; --pc-pro-sub:#D2D2DE; --pc-pro-accent:#CBBDFF;
+  --pc-con-bg:rgba(0,0,0,.30); --pc-con-ink:#F4F4F8; --pc-con-sub:#B2B2C2; --pc-con-accent:#5EEAD4;
+}
+[data-theme="aurora"] .pc-card { backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-color: rgba(255,255,255,.16); }
+[data-theme="brutalist"] {
+  --pc-pro-bg:#FFFFFF; --pc-pro-ink:#000000; --pc-pro-sub:#1A1A1A; --pc-pro-accent:#000000;
+  --pc-con-bg:#000000; --pc-con-ink:#FFFFFF; --pc-con-sub:#CFCFCF; --pc-con-accent:#CCFF00;
+}
+[data-theme="brutalist"] .pc-card { border-width:2px; border-radius:0; box-shadow:none; }
 
 /* === Per-theme typography & structural variation === */
 
@@ -393,6 +423,7 @@ html[data-mode="present"] .slide.is-exiting { z-index: 1; }
   html[data-mode="present"] .slide.is-current .flow__card,
   html[data-mode="present"] .slide.is-current .q-card,
   html[data-mode="present"] .slide.is-current .phase,
+  html[data-mode="present"] .slide.is-current .pc-card,
   html[data-mode="present"] .slide.is-current .arch-card {
     animation: var(--entrance-anim) .48s cubic-bezier(.2,.7,.2,1) both;
   }
@@ -401,12 +432,14 @@ html[data-mode="present"] .slide.is-exiting { z-index: 1; }
   html[data-mode="present"] .slide.is-current .flow__card:nth-child(1),
   html[data-mode="present"] .slide.is-current .q-card:nth-child(1),
   html[data-mode="present"] .slide.is-current .phase:nth-child(1),
+  html[data-mode="present"] .slide.is-current .pc-card:nth-child(1),
   html[data-mode="present"] .slide.is-current .arch-card:nth-child(1) { animation-delay: .16s; }
   html[data-mode="present"] .slide.is-current .pillar:nth-child(2),
   html[data-mode="present"] .slide.is-current .c-card:nth-child(2),
   html[data-mode="present"] .slide.is-current .flow__card:nth-child(2),
   html[data-mode="present"] .slide.is-current .q-card:nth-child(2),
   html[data-mode="present"] .slide.is-current .phase:nth-child(2),
+  html[data-mode="present"] .slide.is-current .pc-card:nth-child(2),
   html[data-mode="present"] .slide.is-current .arch-card:nth-child(2) { animation-delay: .22s; }
   html[data-mode="present"] .slide.is-current .pillar:nth-child(3),
   html[data-mode="present"] .slide.is-current .c-card:nth-child(3),
@@ -469,7 +502,7 @@ html:not([data-mode="present"]) .progress { display: none; }
   font-size: clamp(34px, 4vw, 50px); line-height: 1.05;
   letter-spacing: -0.01em; margin: 14px 0 14px; color: var(--text);
 }
-.slide__subtitle { font-size: 17px; line-height: 1.5; color: var(--text-muted); max-width: 1020px; font-style: italic; }
+.slide__subtitle { font-size: 18.5px; line-height: 1.5; color: var(--text-muted); max-width: 1020px; font-style: italic; }
 .slide__pageno {
   position: absolute; right: 28px; bottom: 22px;
   font: 500 10.5px var(--mono-font); letter-spacing: .12em;
@@ -480,7 +513,7 @@ html:not([data-mode="present"]) .progress { display: none; }
 
 .title-slide__main {
   font-family: var(--display-font); font-weight: 900;
-  font-size: clamp(96px, 11vw, 152px); letter-spacing: 0.04em; line-height: 0.95;
+  font-size: clamp(68px, 7.5vw, 108px); letter-spacing: 0.04em; line-height: 0.95;
   margin: 14px 0 18px; color: var(--text);
 }
 [data-theme="terracotta"] .title-slide__main,
@@ -490,7 +523,7 @@ html:not([data-mode="present"]) .progress { display: none; }
   font-size: clamp(24px, 2.4vw, 30px); color: var(--primary); line-height: 1.25; margin: 0 0 16px;
 }
 .title-slide__vision {
-  font-size: 18px; line-height: 1.55; color: var(--text-muted);
+  font-size: 23px; line-height: 1.55; color: var(--text-muted);
   font-style: italic; max-width: 980px; margin: 0;
 }
 .title-slide__pillars {
@@ -503,7 +536,7 @@ html:not([data-mode="present"]) .progress { display: none; }
 }
 .pillar__num { font: 700 11px var(--mono-font); letter-spacing: .22em; color: var(--primary); }
 .pillar__title { font-family: var(--header-font); font-weight: 700; font-size: 21px; color: var(--text); margin: 6px 0 10px; }
-.pillar__desc { font-size: 13.5px; line-height: 1.5; color: var(--text-muted); }
+.pillar__desc { font-size: 15px; line-height: 1.5; color: var(--text-muted); }
 .title-slide__footer {
   position: absolute; left: 64px; bottom: 24px;
   font: 500 11px var(--mono-font); color: var(--text-subtle); letter-spacing: .08em;
@@ -528,10 +561,10 @@ html:not([data-mode="present"]) .progress { display: none; }
 .arch-card__tag { font: 700 10.5px var(--header-font); letter-spacing: .22em; text-transform: uppercase; color: var(--primary); }
 .arch-card__title { font-family: var(--header-font); font-weight: 700; font-size: 25px; line-height: 1.15; color: var(--text); margin: 8px 0 18px; }
 .arch-card__label { font: 700 9.5px var(--header-font); letter-spacing: .22em; text-transform: uppercase; color: var(--text-subtle); margin-top: 6px; }
-.arch-card__text { font-size: 13.5px; line-height: 1.55; color: var(--text-muted); margin: 6px 0 12px; }
+.arch-card__text { font-size: 15px; line-height: 1.55; color: var(--text-muted); margin: 6px 0 12px; }
 .arch-card__divider { height: 1px; background: var(--divider); margin: 4px 0 10px; }
 .arch-card__challenge-label { font: 700 9.5px var(--header-font); letter-spacing: .22em; text-transform: uppercase; color: var(--accent-bar, var(--primary)); }
-.arch-card__challenge { font-size: 13.5px; line-height: 1.55; color: var(--text); font-weight: 500; margin: 6px 0 0; }
+.arch-card__challenge { font-size: 15px; line-height: 1.55; color: var(--text); font-weight: 500; margin: 6px 0 0; }
 
 .cards-wrap {
   position: absolute; left: 64px; right: 64px; bottom: 56px; top: 220px;
@@ -550,11 +583,11 @@ html:not([data-mode="present"]) .progress { display: none; }
 .c-card[data-accent="accent"] .c-card__num { color: var(--accent); }
 .c-card__title { font-family: var(--header-font); font-weight: 700; font-size: 19px; color: var(--text); margin: 8px 0 6px; line-height: 1.25; }
 .c-card__role { font: 600 10.5px var(--header-font); color: var(--text-subtle); letter-spacing: .04em; margin: 0 0 10px; }
-.c-card__body { font-size: 13px; line-height: 1.55; color: var(--text-muted); }
+.c-card__body { font-size: 14.5px; line-height: 1.55; color: var(--text-muted); }
 .cards-grid[data-dense="true"] .c-card { padding: 18px; }
 .cards-grid[data-dense="true"] .c-card__title { font-size: 17px; margin-top: 6px; }
-.cards-grid[data-dense="true"] .c-card__body { font-size: 12.5px; }
-.cards-footer { margin-top: 16px; font-size: 12.5px; line-height: 1.55; color: var(--text-subtle); }
+.cards-grid[data-dense="true"] .c-card__body { font-size: 13.5px; }
+.cards-footer { margin-top: 16px; font-size: 14px; line-height: 1.55; color: var(--text-subtle); }
 .cards-footer--emphasis {
   color: var(--text);
   background: var(--accent-soft);
@@ -595,7 +628,7 @@ html:not([data-mode="present"]) .progress { display: none; }
   font-size: 16px; line-height: 1.3; color: var(--text);
   margin: 12px 0 8px; padding-right: 36px;
 }
-.q-card__body { font-size: 13px; line-height: 1.5; color: var(--text-muted); }
+.q-card__body { font-size: 14.5px; line-height: 1.5; color: var(--text-muted); }
 
 .flow {
   position: absolute; left: 64px; right: 64px; top: 220px; bottom: 60px;
@@ -631,7 +664,7 @@ html:not([data-mode="present"]) .progress { display: none; }
   display: flex; flex-direction: column;
 }
 .flow__name { font-family: var(--header-font); font-weight: 700; font-size: 17px; color: var(--text); margin: 0 0 8px; line-height: 1.2; }
-.flow__desc { font-size: 12.5px; line-height: 1.5; color: var(--text-muted); flex: 1; }
+.flow__desc { font-size: 14px; line-height: 1.5; color: var(--text-muted); flex: 1; }
 .flow__tag {
   display: inline-block; align-self: flex-start;
   margin-top: 10px;
@@ -662,7 +695,7 @@ html:not([data-mode="present"]) .progress { display: none; }
 .phase__title { font-family: var(--display-font); font-weight: 800; font-size: 24px; line-height: 1.1; color: var(--text); margin: 14px 0 12px; }
 .phase__divider { height: 1px; background: var(--divider); margin: 0 0 12px; }
 .phase__label { font: 700 9px var(--header-font); letter-spacing: .22em; text-transform: uppercase; color: var(--primary); margin-top: 4px; }
-.phase__text { font-size: 12.5px; line-height: 1.5; color: var(--text-muted); margin: 4px 0 10px; }
+.phase__text { font-size: 14px; line-height: 1.5; color: var(--text-muted); margin: 4px 0 10px; }
 .phase__deps {
   margin-top: auto;
   background: var(--accent-soft);
@@ -671,7 +704,7 @@ html:not([data-mode="present"]) .progress { display: none; }
   padding: 10px 12px 12px;
 }
 .phase__deps-label { font: 700 8.5px var(--header-font); letter-spacing: .2em; color: var(--accent); text-transform: uppercase; }
-.phase__deps-text { font-size: 11.5px; line-height: 1.45; color: var(--text); font-weight: 500; margin: 4px 0 0; }
+.phase__deps-text { font-size: 13px; line-height: 1.45; color: var(--text); font-weight: 500; margin: 4px 0 0; }
 .roadmap-footer { position: absolute; left: 64px; right: 64px; bottom: 36px; }
 .objective-bar {
   display: flex; align-items: center; gap: 18px;
@@ -679,10 +712,48 @@ html:not([data-mode="present"]) .progress { display: none; }
   border-radius: 6px; padding: 10px 16px;
 }
 .objective-bar__label { font: 700 11px var(--header-font); letter-spacing: .24em; text-transform: uppercase; color: var(--accent); }
-.objective-bar__text { font-size: 13px; color: var(--text); }
-.objective-bar__highlight { font-size: 13px; color: var(--text); font-weight: 700; }
+.objective-bar__text { font-size: 14.5px; color: var(--text); }
+.objective-bar__highlight { font-size: 14.5px; color: var(--text); font-weight: 700; }
 .objective-bar__sep { color: var(--text-subtle); }
 .metrics-line { margin-top: 10px; font: italic 11.5px var(--body-font); color: var(--text-subtle); }
+
+/* ===== PROS / CONS — pro = light raised panel (top), con = inverted dark panel (bottom) ===== */
+.pc-stack {
+  position: absolute; left: 64px; right: 64px; top: 220px; bottom: 56px;
+  display: flex; flex-direction: column; gap: 16px;
+}
+.pc-stack[data-footer="true"] { bottom: 92px; }
+.pc-card {
+  flex: 1; min-height: 0;
+  border: 1px solid var(--divider); border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 20px 26px 22px;
+  display: flex; flex-direction: column;
+}
+.pc-card--pro { background: var(--pc-pro-bg); color: var(--pc-pro-ink); }
+.pc-card--con { background: var(--pc-con-bg); color: var(--pc-con-ink); }
+.pc-card__head { display: flex; align-items: center; gap: 14px; margin-bottom: 12px; }
+.pc-card__label { font: 700 12px var(--header-font); letter-spacing: .22em; text-transform: uppercase; }
+.pc-card--pro .pc-card__label { color: var(--pc-pro-accent); }
+.pc-card--con .pc-card__label { color: var(--pc-con-accent); }
+.pc-card__rule { flex: 1; height: 1px; }
+.pc-card--pro .pc-card__rule { background: color-mix(in srgb, var(--pc-pro-accent) 35%, transparent); }
+.pc-card--con .pc-card__rule { background: color-mix(in srgb, var(--pc-con-accent) 35%, transparent); }
+.pc-list {
+  margin: 0; padding: 0; list-style: none; flex: 1;
+  display: grid; grid-template-columns: 1fr 1fr; gap: 7px 30px; align-content: center;
+}
+.pc-list li { position: relative; padding-left: 18px; font-size: 14.5px; line-height: 1.45; }
+.pc-list li::before {
+  content: ""; position: absolute; left: 0; top: .55em;
+  width: 7px; height: 7px; border-radius: 2px;
+}
+.pc-card--pro .pc-list li::before { background: var(--pc-pro-accent); }
+.pc-card--con .pc-list li::before { background: var(--pc-con-accent); }
+.pc-footer {
+  position: absolute; left: 64px; right: 64px; bottom: 26px;
+  font: 500 12.5px var(--mono-font); letter-spacing: .03em; color: var(--text-subtle);
+}
 
 @media print {
   @page { size: 13.333in 7.5in; margin: 0; }
@@ -763,7 +834,7 @@ html:not([data-mode="present"]) .progress { display: none; }
 # Deck content
 # YAML stream — each slide is one document, separated by `---`.
 # Edit any field, then run `node sync.js` (or `make sync DECK=<deck-name>` from the project root).
-# Slide types: title, architecture, cards, flow, roadmap.
+# Slide types: title, cards, flow, architecture, roadmap, proscons, questions.
 
 ---
 type: title
@@ -858,21 +929,21 @@ phases:
     status: in_progress    # remove for non-current phases
     title: Phase 1 title
     objective: What we're trying to do.
-    subnets: What's in scope for this phase.
+    scope: What's in scope for this phase.
     deps_label: Dependencies / Outputs
     deps: Critical dependencies or outputs (highlighted block).
   - num: "2"
     date: Phase 2 date
     title: Phase 2 title
     objective: What we're trying to do.
-    subnets: What's in scope for this phase.
+    scope: What's in scope for this phase.
     deps_label: Dependencies / Outputs
     deps: Critical dependencies or outputs.
   - num: "3"
     date: Phase 3 date
     title: Phase 3 title
     objective: What we're trying to do.
-    subnets: What's in scope for this phase.
+    scope: What's in scope for this phase.
     deps_label: Dependencies / Outputs
     deps: Critical dependencies or outputs.
 primary_objective:
@@ -881,6 +952,22 @@ primary_objective:
   highlight: "Headline metric or target."
 phase1_metrics: >-
   Optional small italic footer line — e.g., success metrics for Phase 1.
+
+---
+type: proscons
+slide_label: 05 / Trade-offs
+title: Build the renderer in-house?
+subtitle: Weighing a custom system against off-the-shelf slide tools.
+pros:
+  - Full control over themes, motion, and layout.
+  - Single source of truth in content.md.
+  - Clean, native 16:9 PDF export.
+  - No per-seat licensing costs.
+cons:
+  - Upfront engineering investment.
+  - We own ongoing maintenance.
+  - No third-party template ecosystem.
+footer: Recommendation — build it; control and PDF fidelity outweigh the upkeep.
 
 </script>
 
@@ -1020,8 +1107,8 @@ const renderers = {
             <div class="phase__divider"></div>
             <div class="phase__label">OBJECTIVE</div>
             <div class="phase__text">${esc(p.objective)}</div>
-            <div class="phase__label">SUBNETS / SCOPE</div>
-            <div class="phase__text">${esc(p.subnets)}</div>
+            <div class="phase__label">SCOPE</div>
+            <div class="phase__text">${esc(p.scope)}</div>
             <div class="phase__deps">
               <div class="phase__deps-label">${esc(p.deps_label || "Dependencies")}</div>
               <div class="phase__deps-text">${esc(p.deps)}</div>
@@ -1037,6 +1124,31 @@ const renderers = {
         </div>
         ${d.phase1_metrics ? `<div class="metrics-line">${esc(d.phase1_metrics)}</div>` : ""}
       </div>
+    `;
+  },
+  proscons(d) {
+    const li = (items) => (items || []).map(x => `<li>${esc(x)}</li>`).join("");
+    return `
+      <div class="slide__tag">${esc(d.slide_label)}</div>
+      <h1 class="slide__title">${esc(d.title)}</h1>
+      <p class="slide__subtitle">${esc(d.subtitle)}</p>
+      <div class="pc-stack" data-footer="${d.footer ? "true" : "false"}">
+        <div class="pc-card pc-card--pro">
+          <div class="pc-card__head">
+            <span class="pc-card__label">${esc(d.pros_label || "Pros")}</span>
+            <span class="pc-card__rule"></span>
+          </div>
+          <ul class="pc-list">${li(d.pros)}</ul>
+        </div>
+        <div class="pc-card pc-card--con">
+          <div class="pc-card__head">
+            <span class="pc-card__label">${esc(d.cons_label || "Cons")}</span>
+            <span class="pc-card__rule"></span>
+          </div>
+          <ul class="pc-list">${li(d.cons)}</ul>
+        </div>
+      </div>
+      ${d.footer ? `<div class="pc-footer">${esc(d.footer)}</div>` : ""}
     `;
   },
 };

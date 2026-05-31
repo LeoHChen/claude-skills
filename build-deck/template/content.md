@@ -1,7 +1,7 @@
 # Deck content
 # YAML stream — each slide is one document, separated by `---`.
 # Edit any field, then run `node sync.js` (or `make sync DECK=<deck-name>` from the project root).
-# Slide types: title, architecture, cards, flow, roadmap.
+# Slide types: title, cards, flow, architecture, roadmap, proscons, questions.
 
 ---
 type: title
@@ -96,21 +96,21 @@ phases:
     status: in_progress    # remove for non-current phases
     title: Phase 1 title
     objective: What we're trying to do.
-    subnets: What's in scope for this phase.
+    scope: What's in scope for this phase.
     deps_label: Dependencies / Outputs
     deps: Critical dependencies or outputs (highlighted block).
   - num: "2"
     date: Phase 2 date
     title: Phase 2 title
     objective: What we're trying to do.
-    subnets: What's in scope for this phase.
+    scope: What's in scope for this phase.
     deps_label: Dependencies / Outputs
     deps: Critical dependencies or outputs.
   - num: "3"
     date: Phase 3 date
     title: Phase 3 title
     objective: What we're trying to do.
-    subnets: What's in scope for this phase.
+    scope: What's in scope for this phase.
     deps_label: Dependencies / Outputs
     deps: Critical dependencies or outputs.
 primary_objective:
@@ -119,3 +119,19 @@ primary_objective:
   highlight: "Headline metric or target."
 phase1_metrics: >-
   Optional small italic footer line — e.g., success metrics for Phase 1.
+
+---
+type: proscons
+slide_label: 05 / Trade-offs
+title: Build the renderer in-house?
+subtitle: Weighing a custom system against off-the-shelf slide tools.
+pros:
+  - Full control over themes, motion, and layout.
+  - Single source of truth in content.md.
+  - Clean, native 16:9 PDF export.
+  - No per-seat licensing costs.
+cons:
+  - Upfront engineering investment.
+  - We own ongoing maintenance.
+  - No third-party template ecosystem.
+footer: Recommendation — build it; control and PDF fidelity outweigh the upkeep.
