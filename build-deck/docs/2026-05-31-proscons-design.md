@@ -75,3 +75,32 @@ page number render in Review mode and PDF export. Note: with Brutalist's oversiz
 Archivo Black display font a long title wraps to two lines and crowds the fixed
 `top: 220px` content region — a pre-existing trait shared by all content slide
 types, mitigated here by keeping the sample title short.
+
+## Update — grid subtype (multi-option comparison)
+
+The single stacked layout only covers a one-decision pros vs. cons. For a
+side-by-side comparison of several options that each carry their own pros and cons
+(e.g., B2C vs. B2B vs. B2B2C), `proscons` now also accepts an `options[]` array:
+
+```yaml
+type: proscons
+title: Business model — options, with trade-offs
+options:
+  - title: B2C
+    role: Direct to user
+    pros: [Fastest feedback, Viral reach in AI-native circles]
+    cons: [High CAC, Fragile retention]
+  - title: B2B
+    role: Sell to companies
+    accent: true        # optional — highlight the leading option
+    pros: [...]
+    cons: [...]
+footer: ...             # optional; footer_emphasis: true for the callout box
+```
+
+When `options` is present the renderer switches to grid mode: one split card per
+option (light pros zone over dark cons zone), option `title`/`role` as the header,
+optional `accent` ring on the leading option. It reuses the same `--pc-*` tonal
+variables, so it adapts across all eight themes. Absent `options`, the original
+stacked single-decision layout is unchanged.
+
