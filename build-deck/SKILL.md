@@ -37,7 +37,7 @@ Available slide types:
 | `flow` | horizontal pipeline (frameworks, state machines) | `nodes[4-5]` each with `letter`, `name`, `desc`, optional `tag` |
 | `roadmap` | 3-phase timeline with dependencies block | `phases[3]` with `date`, `status`, `title`, `objective`, `scope`, `deps_label`, `deps`. Plus `primary_objective`, `phase1_metrics` |
 | `questions` | 3×2 grid of open-question cards | `subtitle`, optional `note` (rendered as a pill), `questions[]` with `num`, `headline`, `body` |
-| `proscons` | trade-off / decision — pros vs cons | `pros[]`, `cons[]`; optional `pros_label`, `cons_label`, `footer`. Pros render in the **light** card (top), cons in the **dark** card (bottom) |
+| `proscons` | trade-off / decision — pros vs cons | **Single decision:** `pros[]`, `cons[]` (pros = light card top, cons = dark card bottom). **Comparison grid:** `options[]`, each with `title` + optional `role`/`accent` + `pros[]`/`cons[]` (one split light/dark card per option). Optional `pros_label`, `cons_label`, `footer`, `footer_emphasis` |
 
 See `~/.claude/skills/build-deck/template/content.md` for an example covering every type.
 
@@ -140,5 +140,5 @@ The topbar has an **Export PDF** button that calls `window.print()`. The `@media
 - `content.md` is the single source of truth. Never inline content as canonical.
 - Don't add a ninth theme casually. If the user asks for a custom theme, add it as a new `[data-theme="..."]` block alongside the existing eight.
 - Every slide must fit 16:9 with breathing room. If a section feels cramped, trim copy or split the slide.
-- **Whenever the deck presents a trade-off — pros and cons, benefits and risks, for and against — use the `proscons` slide type, never a plain bulleted list.** Pros go in the light card (top), cons in the dark card (bottom) so the contrast is visually unmistakable. The tonal split is theme-aware (driven by `--pc-*` CSS variables), so it adapts across all eight themes.
+- **Whenever the deck presents a trade-off — pros and cons, benefits and risks, for and against — use the `proscons` slide type, never a plain bulleted list.** Pros go in the light card (top), cons in the dark card (bottom) so the contrast is visually unmistakable. The tonal split is theme-aware (driven by `--pc-*` CSS variables), so it adapts across all eight themes. For a side-by-side comparison of several options that each carry their own pros and cons, use the `options:` grid subtype — one split card (light pros / dark cons) per option.
 - Use the `Skill` tool to invoke this skill from inside a conversation; don't paraphrase the workflow when you can just follow it.

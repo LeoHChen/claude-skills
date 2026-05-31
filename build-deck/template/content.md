@@ -135,3 +135,35 @@ cons:
   - We own ongoing maintenance.
   - No third-party template ecosystem.
 footer: Recommendation — build it; control and PDF fidelity outweigh the upkeep.
+
+---
+type: proscons
+slide_label: 06 / Options
+title: Which path? — options compared
+subtitle: Several options, each with its own trade-offs (proscons grid subtype).
+options:
+  - title: Option A
+    role: Fast path
+    pros:
+      - Ships quickest.
+      - Lowest upfront cost.
+    cons:
+      - Limited ceiling.
+      - Harder to differentiate.
+  - title: Option B
+    role: Balanced
+    accent: true
+    pros:
+      - Strong fit for the use case.
+      - Room to grow.
+    cons:
+      - Moderate build effort.
+  - title: Option C
+    role: Ambitious
+    pros:
+      - Highest ceiling.
+    cons:
+      - Largest investment.
+      - Slowest to value.
+footer: Option B is the current lean — best fit-to-effort balance.
+footer_emphasis: true

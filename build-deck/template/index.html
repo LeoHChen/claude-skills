@@ -182,12 +182,14 @@
   --pc-pro-bg:rgba(255,255,255,.16); --pc-pro-ink:#F7F7FB; --pc-pro-sub:#D2D2DE; --pc-pro-accent:#CBBDFF;
   --pc-con-bg:rgba(0,0,0,.30); --pc-con-ink:#F4F4F8; --pc-con-sub:#B2B2C2; --pc-con-accent:#5EEAD4;
 }
-[data-theme="aurora"] .pc-card { backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-color: rgba(255,255,255,.16); }
+[data-theme="aurora"] .pc-card,
+[data-theme="aurora"] .pcg-card { backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-color: rgba(255,255,255,.16); }
 [data-theme="brutalist"] {
   --pc-pro-bg:#FFFFFF; --pc-pro-ink:#000000; --pc-pro-sub:#1A1A1A; --pc-pro-accent:#000000;
   --pc-con-bg:#000000; --pc-con-ink:#FFFFFF; --pc-con-sub:#CFCFCF; --pc-con-accent:#CCFF00;
 }
-[data-theme="brutalist"] .pc-card { border-width:2px; border-radius:0; box-shadow:none; }
+[data-theme="brutalist"] .pc-card,
+[data-theme="brutalist"] .pcg-card { border-width:2px; border-radius:0; box-shadow:none; }
 
 /* === Per-theme typography & structural variation === */
 
@@ -424,6 +426,7 @@ html[data-mode="present"] .slide.is-exiting { z-index: 1; }
   html[data-mode="present"] .slide.is-current .q-card,
   html[data-mode="present"] .slide.is-current .phase,
   html[data-mode="present"] .slide.is-current .pc-card,
+  html[data-mode="present"] .slide.is-current .pcg-col,
   html[data-mode="present"] .slide.is-current .arch-card {
     animation: var(--entrance-anim) .48s cubic-bezier(.2,.7,.2,1) both;
   }
@@ -755,6 +758,40 @@ html:not([data-mode="present"]) .progress { display: none; }
   font: 500 12.5px var(--mono-font); letter-spacing: .03em; color: var(--text-subtle);
 }
 
+/* ===== PROS / CONS — grid subtype: N options, each a split card (light pros over dark cons) ===== */
+.pcg-grid {
+  position: absolute; left: 64px; right: 64px; top: 200px; bottom: 56px;
+  display: grid; grid-template-columns: repeat(var(--n, 3), 1fr); gap: 18px;
+}
+.pcg-grid[data-footer="plain"] { bottom: 88px; }
+.pcg-grid[data-footer="emph"]  { bottom: 112px; }
+.pcg-col { display: flex; flex-direction: column; min-height: 0; }
+.pcg-col__head { display: flex; align-items: baseline; gap: 10px; margin-bottom: 10px; }
+.pcg-col__title { font-family: var(--header-font); font-weight: 700; font-size: 18px; color: var(--text); }
+.pcg-col__role { font: 600 10.5px var(--header-font); letter-spacing: .04em; color: var(--text-subtle); }
+.pcg-card {
+  flex: 1; min-height: 0; overflow: hidden;
+  border: 1px solid var(--divider); border-radius: var(--radius); box-shadow: var(--shadow);
+  display: flex; flex-direction: column;
+}
+.pcg-card.is-accent { border-color: transparent; box-shadow: 0 0 0 2px var(--accent), var(--shadow); }
+.pcg-zone { flex: 1; min-height: 0; padding: 14px 16px; display: flex; flex-direction: column; }
+.pcg-zone--pro { background: var(--pc-pro-bg); color: var(--pc-pro-ink); }
+.pcg-zone--con { background: var(--pc-con-bg); color: var(--pc-con-ink); }
+.pcg-zone__label { font: 700 10px var(--header-font); letter-spacing: .2em; text-transform: uppercase; margin-bottom: 8px; }
+.pcg-zone--pro .pcg-zone__label { color: var(--pc-pro-accent); }
+.pcg-zone--con .pcg-zone__label { color: var(--pc-con-accent); }
+.pcg-list { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 5px; }
+.pcg-list li { position: relative; padding-left: 15px; font-size: 12.5px; line-height: 1.4; }
+.pcg-list li::before { content: ""; position: absolute; left: 0; top: .5em; width: 6px; height: 6px; border-radius: 2px; }
+.pcg-zone--pro .pcg-list li::before { background: var(--pc-pro-accent); }
+.pcg-zone--con .pcg-list li::before { background: var(--pc-con-accent); }
+.pcg-footer { position: absolute; left: 64px; right: 64px; bottom: 26px; font: 500 12.5px var(--mono-font); letter-spacing: .03em; color: var(--text-subtle); }
+.pcg-footer--emphasis {
+  color: var(--text); background: var(--accent-soft); border-left: 3px solid var(--accent);
+  padding: 11px 15px; border-radius: 6px; font-family: var(--body-font); font-size: 13px;
+}
+
 @media print {
   @page { size: 13.333in 7.5in; margin: 0; }
   html, body { background: var(--bg); }
@@ -969,6 +1006,38 @@ cons:
   - No third-party template ecosystem.
 footer: Recommendation — build it; control and PDF fidelity outweigh the upkeep.
 
+---
+type: proscons
+slide_label: 06 / Options
+title: Which path? — options compared
+subtitle: Several options, each with its own trade-offs (proscons grid subtype).
+options:
+  - title: Option A
+    role: Fast path
+    pros:
+      - Ships quickest.
+      - Lowest upfront cost.
+    cons:
+      - Limited ceiling.
+      - Harder to differentiate.
+  - title: Option B
+    role: Balanced
+    accent: true
+    pros:
+      - Strong fit for the use case.
+      - Room to grow.
+    cons:
+      - Moderate build effort.
+  - title: Option C
+    role: Ambitious
+    pros:
+      - Highest ceiling.
+    cons:
+      - Largest investment.
+      - Slowest to value.
+footer: Option B is the current lean — best fit-to-effort balance.
+footer_emphasis: true
+
 </script>
 
 <script>
@@ -1128,10 +1197,39 @@ const renderers = {
   },
   proscons(d) {
     const li = (items) => (items || []).map(x => `<li>${esc(x)}</li>`).join("");
-    return `
+    const head = `
       <div class="slide__tag">${esc(d.slide_label)}</div>
       <h1 class="slide__title">${esc(d.title)}</h1>
-      <p class="slide__subtitle">${esc(d.subtitle)}</p>
+      <p class="slide__subtitle">${esc(d.subtitle)}</p>`;
+    // Grid subtype: N options, each a split card (light pros / dark cons).
+    if (Array.isArray(d.options) && d.options.length) {
+      const footerKind = d.footer ? (d.footer_emphasis ? "emph" : "plain") : "none";
+      return `
+      ${head}
+      <div class="pcg-grid" style="--n:${d.options.length};" data-footer="${footerKind}">
+        ${d.options.map(o => `
+          <div class="pcg-col">
+            <div class="pcg-col__head">
+              <span class="pcg-col__title">${esc(o.title)}</span>
+              ${o.role ? `<span class="pcg-col__role">${esc(o.role)}</span>` : ""}
+            </div>
+            <div class="pcg-card${o.accent ? " is-accent" : ""}">
+              <div class="pcg-zone pcg-zone--pro">
+                <div class="pcg-zone__label">${esc(d.pros_label || "Pros")}</div>
+                <ul class="pcg-list">${li(o.pros)}</ul>
+              </div>
+              <div class="pcg-zone pcg-zone--con">
+                <div class="pcg-zone__label">${esc(d.cons_label || "Cons")}</div>
+                <ul class="pcg-list">${li(o.cons)}</ul>
+              </div>
+            </div>
+          </div>`).join("")}
+      </div>
+      ${d.footer ? `<div class="pcg-footer${d.footer_emphasis ? " pcg-footer--emphasis" : ""}">${esc(d.footer)}</div>` : ""}
+    `;
+    }
+    return `
+      ${head}
       <div class="pc-stack" data-footer="${d.footer ? "true" : "false"}">
         <div class="pc-card pc-card--pro">
           <div class="pc-card__head">
