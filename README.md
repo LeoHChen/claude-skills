@@ -3,15 +3,28 @@
 Personal Claude Code skills. Each subdirectory is a skill that can be loaded by
 the `Skill` tool when working with Claude Code.
 
-**Current release: [v1.2.0](https://github.com/LeoHChen/claude-skills/releases/tag/v1.2.0)** — see "What's new" below or the full [release notes](https://github.com/LeoHChen/claude-skills/releases/tag/v1.2.0).
+**Current release: [v1.3.0](https://github.com/LeoHChen/claude-skills/releases/tag/v1.3.0)** — see "What's new" below or the full [release notes](https://github.com/LeoHChen/claude-skills/releases/tag/v1.3.0).
 
 ## Skills
 
 | Skill | What it does |
 | --- | --- |
-| [`build-deck`](build-deck/) | Themed website-rendered slide deck from a `content.md` YAML stream. **Dual-mode renderer** — Review (scroll) for editing, Present (one slide fills viewport) for delivery. Present mode adds a top progress hairline, floating bottom nav (`‹ Prev   NN / MM   Next ›`, fades on idle), and keyboard nav (`← / → / Space / Home / End / Esc`). On-slide page numbers visible in both modes and in PDF export. **Self-contained scaffold** — each deck folder now ships with its own `Makefile`, and `make sync` bakes `content.md` into `index.html`. **8 themes** with distinct typography, slide chrome, and motion signatures: Terracotta, Carbon, Berry, Lab, Mono, Aurora, Brutalist, Dusk. **Motion in Present mode** — slide transitions (Fade / Slide / Zoom / Cut, per-theme defaults, user-override topbar selector), element entrance cascade, per-theme background motion (Aurora gradient drift, Mono pulse, Carbon scanline, Berry vignette breathe, Terracotta paper grain). All CSS-only, gated by `prefers-reduced-motion`. Slide types: `title`, `architecture`, `cards`, `flow`, `roadmap`, `questions`. Export-PDF works from both modes. |
+| [`build-deck`](build-deck/) | Themed website-rendered slide deck from a `content.md` YAML stream. **Dual-mode renderer** — Review (scroll) for editing, Present (one slide fills viewport) for delivery. Present mode adds a top progress hairline, floating bottom nav (`‹ Prev   NN / MM   Next ›`, fades on idle), and keyboard nav (`← / → / Space / Home / End / Esc`). On-slide page numbers visible in both modes and in PDF export. **Self-contained scaffold** — each deck folder now ships with its own `Makefile`, and `make sync` bakes `content.md` into `index.html`. **8 themes** with distinct typography, slide chrome, and motion signatures: Terracotta, Carbon, Berry, Lab, Mono, Aurora, Brutalist, Dusk. **Motion in Present mode** — slide transitions (Fade / Slide / Zoom / Cut, per-theme defaults, user-override topbar selector), element entrance cascade, per-theme background motion (Aurora gradient drift, Mono pulse, Carbon scanline, Berry vignette breathe, Terracotta paper grain). All CSS-only, gated by `prefers-reduced-motion`. Slide types: `title`, `architecture`, `cards`, `flow`, `roadmap`, `questions`, `proscons` (trade-off slide — pros in a light card, cons in a dark card). Export-PDF works from both modes. |
 | [`write-doc`](write-doc/) | Write a Markdown document and render it to themed HTML and PDF via `make sync DOC=<name> [THEME=<theme>]` and `make pdf DOC=<name> [THEME=<theme>]`. Themes: Terracotta, Carbon, Berry, Lab — tuned for print. Pandoc + headless Chromium pipeline (no LaTeX). |
 | [`nano-banana`](nano-banana/) | Generate or edit images via Google's Gemini "Nano Banana" image-model family. Stdlib-only Python CLI; defaults to `gemini-3.1-flash-image-preview`, with Pro tier via `--model nano-banana-pro-preview` and stable fallback `gemini-2.5-flash-image`. Supports text-to-image, image edit, and multi-reference composition (repeat `--input`). Requires `GEMINI_API_KEY`. |
+
+## What's new in v1.3.0
+
+**`build-deck` pros/cons + type scale** — a new slide type plus design-review refinements to the renderer.
+
+- **New `proscons` slide type** — trade-offs render as two stacked, contrasting panels: pros in a light raised card (top), cons in an inverted dark card (bottom). Tonal contrast (no green/red) driven by theme-aware `--pc-*` variables, with tuned overrides for Carbon, Dusk, Aurora (glass), and Brutalist so it adapts across all 8 themes. Optional `pros_label` / `cons_label` / `footer`.
+- **Type scale** — smaller hero title (`clamp(96–152px)` → `clamp(68–108px)`), larger vision line (18 → 23px), and +1.5px body text across every slide type.
+- **Roadmap** — renamed the `subnets` field and "SUBNETS / SCOPE" label to `scope` / "SCOPE" (drops Poseidon-specific jargon from the generic template).
+- Fixed stale "4 themes" references in the skill doc (the renderer has 8).
+
+Design doc in [`build-deck/docs/`](build-deck/docs/). Issue #13 / PR #14.
+
+Full notes: [v1.3.0 release](https://github.com/LeoHChen/claude-skills/releases/tag/v1.3.0).
 
 ## What's new in v1.2.0
 
