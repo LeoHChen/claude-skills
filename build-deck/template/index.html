@@ -590,6 +590,11 @@ html:not([data-mode="present"]) .progress { display: none; }
 .cards-grid[data-dense="true"] .c-card { padding: 18px; }
 .cards-grid[data-dense="true"] .c-card__title { font-size: 17px; margin-top: 6px; }
 .cards-grid[data-dense="true"] .c-card__body { font-size: 13.5px; }
+.c-card__bullets { margin: 6px 0 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 6px; }
+.c-card__bullets li { position: relative; padding-left: 16px; font-size: 13.5px; line-height: 1.45; color: var(--text-muted); }
+.c-card__bullets li::before { content: ""; position: absolute; left: 0; top: .52em; width: 6px; height: 6px; border-radius: 2px; background: var(--primary); }
+.c-card[data-accent="accent"] .c-card__bullets li::before { background: var(--accent); }
+.cards-grid[data-dense="true"] .c-card__bullets li { font-size: 12.5px; }
 .cards-footer { margin-top: 16px; font-size: 14px; line-height: 1.55; color: var(--text-subtle); }
 .cards-footer--emphasis {
   color: var(--text);
@@ -1110,7 +1115,8 @@ const renderers = {
               ${c.num ? `<div class="c-card__num">${esc(c.num)}</div>` : ""}
               <div class="c-card__title">${esc(c.title)}</div>
               ${c.role ? `<div class="c-card__role">${esc(c.role)}</div>` : ""}
-              <div class="c-card__body">${esc(c.body)}</div>
+              ${c.body ? `<div class="c-card__body">${esc(c.body)}</div>` : ""}
+              ${Array.isArray(c.bullets) ? `<ul class="c-card__bullets">${c.bullets.map(b => `<li>${esc(b)}</li>`).join("")}</ul>` : ""}
             </div>`).join("")}
         </div>
         ${d.footer ? `<div class="${footerCls}">${esc(d.footer)}</div>` : ""}
