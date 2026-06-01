@@ -33,7 +33,7 @@ Available slide types:
 | --- | --- | --- |
 | `title` | hero opener | `title`, `subtitle`, `vision`, `pillars[3]`, `footer` |
 | `architecture` | two-card comparison | `cards[2]` each with `tag`, `accent`, `title`, `function_*`, `challenge_*` |
-| `cards` | N-up grid (principles, user classes, action items) | `columns: 2|3`, optional `dense: true`, `cards[]` with `num`, `title`, `role`, `body`. Optional `footer` and `footer_emphasis: true` |
+| `cards` | N-up grid (principles, user classes, action items) | `columns: 2|3`, optional `dense: true`, `cards[]` with `num`, `title`, `role`, and `body` *or* `bullets[]` (bulleted list). Optional `footer` and `footer_emphasis: true` |
 | `flow` | horizontal pipeline (frameworks, state machines) | `nodes[4-5]` each with `letter`, `name`, `desc`, optional `tag` |
 | `roadmap` | 3-phase timeline with dependencies block | `phases[3]` with `date`, `status`, `title`, `objective`, `scope`, `deps_label`, `deps`. Plus `primary_objective`, `phase1_metrics` |
 | `questions` | 3×2 grid of open-question cards | `subtitle`, optional `note` (rendered as a pill), `questions[]` with `num`, `headline`, `body` |
