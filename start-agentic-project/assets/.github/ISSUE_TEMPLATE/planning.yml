@@ -1,0 +1,73 @@
+name: Planning Issue
+description: Required planning gate before non-trivial implementation starts.
+title: "[Plan] "
+labels:
+  - planning
+body:
+  - type: textarea
+    id: goal
+    attributes:
+      label: Goal
+      description: What are we trying to accomplish, and for whom?
+    validations:
+      required: true
+  - type: textarea
+    id: motivation
+    attributes:
+      label: Motivation
+      description: Why does this matter now?
+    validations:
+      required: true
+  - type: textarea
+    id: scope
+    attributes:
+      label: Scope
+      description: What is included?
+    validations:
+      required: true
+  - type: textarea
+    id: non_goals
+    attributes:
+      label: Non-goals
+      description: What should this explicitly avoid?
+    validations:
+      required: true
+  - type: textarea
+    id: assumptions
+    attributes:
+      label: Assumptions And Open Questions
+      description: List assumptions, risks, and questions that need Leo's decision.
+    validations:
+      required: true
+  - type: textarea
+    id: agent_review
+    attributes:
+      label: Three-Agent Review
+      description: TPM, Coder, and Designer/Reviewer notes.
+      placeholder: |
+        TPM:
+        Coder:
+        Designer/Reviewer:
+    validations:
+      required: true
+  - type: textarea
+    id: plan
+    attributes:
+      label: Implementation Plan
+      description: Ordered implementation steps. No code starts before this exists.
+    validations:
+      required: true
+  - type: textarea
+    id: verification
+    attributes:
+      label: Verification Plan
+      description: Commands, checks, smoke tests, or review steps that prove completion.
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance Criteria
+      description: Concrete criteria for closing this issue.
+    validations:
+      required: true
