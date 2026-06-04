@@ -1,0 +1,99 @@
+/* CV Pixel — 8-bit / arcade. Pixel display face, mono body, inverted blocky section bars. */
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap');
+
+:root {
+  --ink: #16161D;
+  --muted: #565666;
+  --line: #D5D5DE;
+  --accent: #E2483D;   /* arcade red */
+  --accent2: #2D6CDF;  /* arcade blue */
+  --soft: #F3F3F8;
+  --paper: #FFFFFF;
+}
+
+@page { size: Letter; margin: 0.5in 0.6in; }
+html { font-size: 7.8pt; }
+
+body {
+  max-width: none;
+  margin: 0;
+  color: var(--ink);
+  background: var(--paper);
+  font-family: "Space Mono", "Courier New", monospace;
+  line-height: 1.32;
+}
+
+h1 {
+  margin: 0 0 6pt;
+  font-family: "Press Start 2P", monospace;
+  font-weight: 400;
+  font-size: 15pt;
+  line-height: 1.15;
+  color: var(--ink);
+  page-break-after: avoid;
+}
+
+h1 + p {                  /* tagline */
+  margin: 0 0 8pt;
+  font-weight: 700;
+  font-size: 9.5pt;
+  color: var(--accent);
+}
+
+h1 + p + p {              /* contact */
+  margin: 0 0 9pt;
+  padding: 5pt 7pt;
+  background: var(--soft);
+  border: 2px solid var(--ink);
+  color: var(--muted);
+  font-size: 8pt;
+}
+
+h2 {
+  margin: 11pt 0 4pt;
+  padding: 3pt 5pt;
+  font-family: "Press Start 2P", monospace;
+  font-weight: 400;
+  font-size: 8.5pt;
+  color: var(--paper);
+  background: var(--ink);
+  page-break-after: avoid;
+}
+
+h3 {
+  margin: 6pt 0 0;
+  font-weight: 700;
+  font-size: 10.5pt;
+  page-break-after: avoid;
+}
+
+h3 + p { margin: 0 0 3pt; }
+em { color: var(--accent2); font-style: normal; font-weight: 700; font-size: 8.2pt; }
+p { margin: 0 0 4pt; }
+ul, ol { margin: 1pt 0 4pt; padding-left: 14pt; }
+li { margin-bottom: 1.5pt; }
+li::marker { color: var(--accent); content: "\25A0\00A0"; }
+strong { color: var(--ink); font-weight: 700; }
+a { color: var(--accent2); text-decoration: none; }
+hr { border: none; border-top: 2px dotted var(--line); margin: 8pt 0; }
+
+blockquote {
+  margin: 6pt 0;
+  padding: 5pt 9pt;
+  background: var(--soft);
+  border-left: 4px solid var(--accent);
+  color: var(--muted);
+}
+
+.footer {
+  margin-top: 12pt;
+  padding: 7pt 10pt;
+  border: 2px solid var(--ink);
+  text-align: center;
+  page-break-inside: avoid;
+}
+.footer p { margin: 0 0 3pt; color: var(--muted); font-size: 8.5pt; }
+.footer p:last-child { margin-bottom: 0; }
+.footer strong { color: var(--accent); font-weight: 700; }
+
+* { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
