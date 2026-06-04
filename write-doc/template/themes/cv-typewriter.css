@@ -1,0 +1,103 @@
+/* CV Typewriter — old-school manuscript. Typewriter faces, manila paper, stamp-red accent,
+   dashed rules, underlined job titles. */
+@import url('https://fonts.googleapis.com/css2?family=Special+Elite&family=Courier+Prime:ital,wght@0,400;0,700;1,400&display=swap');
+
+:root {
+  --ink: #2A2620;
+  --muted: #6E6557;
+  --line: #C9BFAC;
+  --accent: #A8362A;   /* stamp red */
+  --paper: #FAF5E9;    /* manila */
+}
+
+@page { size: Letter; margin: 0.5in 0.6in; }
+html { font-size: 7.8pt; }
+
+body {
+  max-width: none;
+  margin: 0;
+  color: var(--ink);
+  background: var(--paper);
+  font-family: "Courier Prime", "Courier New", monospace;
+  line-height: 1.32;
+}
+
+h1 {
+  margin: 0 0 2pt;
+  font-family: "Special Elite", "Courier Prime", monospace;
+  font-weight: 400;
+  font-size: 24pt;
+  line-height: 1.05;
+  letter-spacing: 0.5pt;
+  page-break-after: avoid;
+}
+
+h1 + p {                   /* tagline */
+  margin: 0 0 6pt;
+  font-weight: 700;
+  font-size: 10pt;
+  letter-spacing: 0.3pt;
+}
+
+h1 + p + p {               /* contact */
+  margin: 0 0 8pt;
+  padding: 5pt 0;
+  border-top: 1px dashed var(--ink);
+  border-bottom: 1px dashed var(--ink);
+  color: var(--muted);
+  font-size: 8.2pt;
+}
+
+h2 {
+  margin: 10pt 0 3pt;
+  padding: 0 0 1pt;
+  font-family: "Special Elite", "Courier Prime", monospace;
+  font-weight: 400;
+  font-size: 12pt;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 1pt;
+  border-bottom: 2px solid var(--accent);
+  page-break-after: avoid;
+}
+
+h3 {
+  margin: 6pt 0 0;
+  font-weight: 700;
+  font-size: 10.5pt;
+  text-decoration: underline;
+  text-underline-offset: 2pt;
+  page-break-after: avoid;
+}
+
+h3 + p { margin: 0 0 3pt; }
+em { color: var(--muted); font-style: italic; font-size: 8.6pt; }
+p { margin: 0 0 4pt; }
+ul, ol { margin: 1pt 0 4pt; padding-left: 16pt; }
+li { margin-bottom: 1.4pt; }
+li::marker { color: var(--accent); content: "* "; }
+strong { color: var(--ink); font-weight: 700; }
+a { color: var(--accent); text-decoration: none; }
+hr { border: none; border-top: 1px dashed var(--line); margin: 8pt 0; }
+
+blockquote {
+  margin: 6pt 0;
+  padding: 4pt 10pt;
+  border-left: 2px solid var(--accent);
+  color: var(--muted);
+  font-style: italic;
+}
+
+.footer {
+  margin-top: 10pt;
+  padding: 6pt 14pt;
+  border-top: 1px dashed var(--ink);
+  border-bottom: 1px dashed var(--ink);
+  text-align: center;
+  page-break-inside: avoid;
+}
+.footer p { margin: 0 0 2.5pt; color: var(--muted); font-size: 9pt; }
+.footer p:last-child { margin-bottom: 0; }
+.footer strong { color: var(--accent); font-weight: 700; }
+
+* { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
