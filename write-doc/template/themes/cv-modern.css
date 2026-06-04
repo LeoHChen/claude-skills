@@ -162,6 +162,46 @@ table p {
   margin: 0;
 }
 
+/* Optional designed footer — wrap closing content in a fenced div:
+   ::: {.footer}
+   **Trait** · **Trait** · **Trait**
+
+   One-line closing statement.
+   ::: */
+.footer {
+  margin-top: 8pt;
+  padding: 6pt 14pt 6pt;
+  background: var(--wash);
+  text-align: center;
+  page-break-inside: avoid;
+}
+
+.footer::before {
+  content: "";
+  display: block;
+  width: 46pt;
+  height: 3pt;
+  margin: 0 auto 5pt;
+  border-radius: 2pt;
+  background: linear-gradient(90deg, var(--blue) 0 72%, var(--amber) 72% 100%);
+}
+
+.footer p {
+  margin: 0 0 2.5pt;
+  color: var(--muted);
+  font-size: 9.1pt;
+  line-height: 1.35;
+}
+
+.footer p:last-child {
+  margin-bottom: 0;
+}
+
+.footer strong {
+  color: var(--blue);
+  font-weight: 700;
+}
+
 * {
   -webkit-print-color-adjust: exact;
   print-color-adjust: exact;

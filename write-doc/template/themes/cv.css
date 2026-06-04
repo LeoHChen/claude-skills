@@ -57,4 +57,30 @@ table { border-collapse: collapse; width: 100%; font-size: 8.5pt; margin: 5pt 0 
 th, td { border: 1px solid #E5E7EB; padding: 4pt 5pt; text-align: left; vertical-align: top; }
 th { background: #F3F4F6; font-weight: 700; }
 
+/* Optional designed footer — wrap closing content in a fenced div:
+   ::: {.footer}
+   **Trait** · **Trait** · **Trait**
+
+   One-line closing statement.
+   ::: */
+.footer {
+  margin-top: 8pt;
+  padding: 6pt 14pt 6pt;
+  background: #F8FAFC;
+  text-align: center;
+  page-break-inside: avoid;
+}
+.footer::before {
+  content: "";
+  display: block;
+  width: 46pt;
+  height: 3pt;
+  margin: 0 auto 5pt;
+  border-radius: 2pt;
+  background: #1F4D78;
+}
+.footer p { margin: 0 0 2.5pt; color: #4B5563; font-size: 9.1pt; line-height: 1.35; }
+.footer p:last-child { margin-bottom: 0; }
+.footer strong { color: #1F4D78; font-weight: 700; }
+
 * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
