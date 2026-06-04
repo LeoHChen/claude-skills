@@ -1,0 +1,60 @@
+/* CV — tight print layout for resume-style Markdown documents. */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+@page { size: Letter; margin: 0.55in 0.65in; }
+html { font-size: 9.45pt; }
+body {
+  font-family: "Inter", system-ui, sans-serif;
+  color: #111827;
+  line-height: 1.34;
+  max-width: none;
+  margin: 0;
+}
+
+h1 {
+  font-size: 23pt;
+  line-height: 1.05;
+  letter-spacing: 0;
+  margin: 0 0 4pt;
+  padding-bottom: 5pt;
+  border-bottom: 1.5px solid #D1D5DB;
+  page-break-after: avoid;
+}
+
+h2 {
+  font-size: 13.2pt;
+  line-height: 1.15;
+  margin: 10pt 0 4pt;
+  color: #1F4D78;
+  page-break-after: avoid;
+}
+
+h3 {
+  font-size: 10.3pt;
+  line-height: 1.15;
+  margin: 7pt 0 2pt;
+  color: #111827;
+  page-break-after: avoid;
+}
+
+p { margin: 0 0 4pt; }
+ul, ol { margin: 2pt 0 5pt; padding-left: 18pt; }
+li { margin-bottom: 1.6pt; }
+strong { color: #111827; font-weight: 700; }
+em { color: #4B5563; font-style: italic; }
+a { color: #1F4D78; text-decoration: none; }
+hr { border: none; border-top: 1px solid #E5E7EB; margin: 8pt 0; }
+
+blockquote {
+  border-left: 2px solid #1F4D78;
+  padding: 5pt 8pt;
+  margin: 6pt 0;
+  background: #F8FAFC;
+  color: #374151;
+}
+
+table { border-collapse: collapse; width: 100%; font-size: 8.5pt; margin: 5pt 0 7pt; }
+th, td { border: 1px solid #E5E7EB; padding: 4pt 5pt; text-align: left; vertical-align: top; }
+th { background: #F3F4F6; font-weight: 700; }
+
+* { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
