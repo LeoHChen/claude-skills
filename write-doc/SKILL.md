@@ -1,6 +1,6 @@
 ---
 name: write-doc
-description: Write or update a markdown document that ships from a Markdown source into themed HTML and PDF outputs. Source is always .md; rendering is make-driven via `make sync DOC=<name>` for `index.html` and `make pdf DOC=<name>` for the printable PDF. Use when the user asks to write, draft, revise, or update any prose document — design doc, RFC, memo, white paper, technical spec, brief, exec summary, resume, CV — that's likely to be circulated as a PDF. Themes available: terracotta, carbon, berry, lab, cv. Don't use Word, Pages, Google Docs, or LaTeX directly.
+description: Write or update a markdown document that ships from a Markdown source into themed HTML and PDF outputs. Source is always .md; rendering is make-driven via `make sync DOC=<name>` for `index.html` and `make pdf DOC=<name>` for the printable PDF. Use when the user asks to write, draft, revise, or update any prose document — design doc, RFC, memo, white paper, technical spec, brief, exec summary, resume, CV — that's likely to be circulated as a PDF. Themes available: terracotta, carbon, berry, lab, cv, cv-modern. Don't use Word, Pages, Google Docs, or LaTeX directly.
 ---
 
 # Writing PDF-renderable docs (User's Standard Pattern)
@@ -19,7 +19,8 @@ as a PDF, follow this pattern.
 │   ├── carbon.css        # white page, sharp sans, lime accent
 │   ├── berry.css         # cream + deep berry serif
 │   ├── lab.css           # off-white + magenta + mint
-│   └── cv.css            # tight two-page resume/CV print layout
+│   ├── cv.css            # tight two-page resume/CV print layout
+│   └── cv-modern.css     # polished executive resume/CV print layout
 └── {doc-name}.md         # source — always plain Markdown
 ```
 
@@ -32,13 +33,15 @@ as a PDF, follow this pattern.
    ```bash
    make sync DOC=my-doc                 # bakes my-doc.md into index.html
    make sync DOC=my-doc THEME=carbon    # preview under a different theme
-   make sync DOC=my-resume THEME=cv     # tight resume/CV preview
+   make sync DOC=my-resume THEME=cv          # tight resume/CV preview
+   make sync DOC=my-resume THEME=cv-modern   # modern executive CV preview
    ```
 3. **Render to PDF** with the Makefile target:
    ```bash
    make pdf DOC=my-doc                  # uses default theme (terracotta)
    make pdf DOC=my-doc THEME=carbon     # explicit theme
-   make pdf DOC=my-resume THEME=cv      # tight resume/CV PDF
+   make pdf DOC=my-resume THEME=cv          # tight resume/CV PDF
+   make pdf DOC=my-resume THEME=cv-modern   # modern executive CV PDF
    make themes                          # list available themes
    ```
 4. The outputs are `index.html` for browser review and `{doc-name}.pdf`
@@ -54,12 +57,16 @@ as a PDF, follow this pattern.
 | **berry** | Elegant, formal | Fraunces (serif) | `#6D2E46` |
 | **lab** | Modern, minimal, design-y | Space Grotesk | `#FF2D6B` |
 | **cv** | Dense, resume/CV-ready | Inter | `#1F4D78` |
+| **cv-modern** | Polished executive CV | Space Grotesk + Inter | `#0E7C7B` + `#C17A18` |
 
 All themes use a light page (white or cream) for print readability.
 Carbon uses a dark code block as the only dark element — keeps the
 "carbon" feel without exhausting the printer.
 CV uses tighter margins, spacing, and type scale so resume-style Markdown
 can usually fit into one or two pages without switching tools.
+CV Modern keeps the same resume density but adds a stronger header,
+subtle contact band, teal section hierarchy, and amber highlight accent
+for a more contemporary executive document.
 
 **Never default to a deep-blue theme** — the user has explicitly
 rejected that aesthetic across the deck and doc skills.
