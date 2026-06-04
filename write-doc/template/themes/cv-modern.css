@@ -1,0 +1,168 @@
+/* CV Modern — executive resume/CV theme with polished print hierarchy. */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700&display=swap');
+
+:root {
+  --ink: #101820;
+  --muted: #53606C;
+  --quiet: #EEF2F5;
+  --line: #D7DEE5;
+  --blue: #2563A8;
+  --amber: #C17A18;
+  --paper: #FFFFFF;
+  --wash: #F7FAFC;
+}
+
+@page { size: Letter; margin: 0.52in 0.62in 0.58in; }
+
+html { font-size: 9.35pt; }
+
+body {
+  position: relative;
+  max-width: none;
+  margin: 0;
+  padding: 0;
+  color: var(--ink);
+  background: var(--paper);
+  font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  line-height: 1.35;
+}
+
+h1::before {
+  content: "";
+  display: block;
+  height: 5pt;
+  margin: 0 0 5pt;
+  background: linear-gradient(90deg, var(--blue) 0 72%, var(--amber) 72% 100%);
+}
+
+h1 {
+  margin: 0 0 3pt;
+  padding: 0;
+  color: var(--ink);
+  font-family: "Space Grotesk", "Inter", system-ui, sans-serif;
+  font-size: 24.5pt;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0;
+  page-break-after: avoid;
+}
+
+h1 + p {
+  margin: 0 0 3pt;
+  color: var(--ink);
+  font-size: 10.8pt;
+  font-weight: 700;
+  line-height: 1.24;
+}
+
+h1 + p + p {
+  display: block;
+  margin: 0 0 8pt;
+  padding: 5pt 7pt;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  background: var(--wash);
+  color: var(--muted);
+  font-size: 9.2pt;
+  line-height: 1.25;
+}
+
+h2 {
+  margin: 10pt 0 4pt;
+  padding: 0 0 2pt;
+  border-bottom: 1px solid var(--line);
+  color: var(--blue);
+  font-family: "Space Grotesk", "Inter", system-ui, sans-serif;
+  font-size: 12.8pt;
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: 0;
+  page-break-after: avoid;
+}
+
+h3 {
+  margin: 7pt 0 1.5pt;
+  color: var(--ink);
+  font-size: 10.35pt;
+  font-weight: 800;
+  line-height: 1.18;
+  page-break-after: avoid;
+}
+
+p {
+  margin: 0 0 4pt;
+}
+
+ul,
+ol {
+  margin: 2pt 0 5pt;
+  padding-left: 15pt;
+}
+
+li {
+  margin-bottom: 1.7pt;
+  padding-left: 1pt;
+}
+
+li::marker {
+  color: var(--blue);
+}
+
+strong {
+  color: var(--ink);
+  font-weight: 800;
+}
+
+em {
+  color: var(--muted);
+  font-style: italic;
+}
+
+a {
+  color: var(--blue);
+  text-decoration: none;
+}
+
+hr {
+  border: none;
+  border-top: 1px solid var(--line);
+  margin: 8pt 0;
+}
+
+blockquote {
+  margin: 6pt 0;
+  padding: 6pt 8pt 6pt 9pt;
+  border-left: 3px solid var(--amber);
+  background: #FFF8ED;
+  color: #3D3324;
+}
+
+table {
+  width: 100%;
+  margin: 5pt 0 7pt;
+  border-collapse: collapse;
+  font-size: 8.5pt;
+}
+
+th,
+td {
+  border: 1px solid var(--line);
+  padding: 4pt 5pt;
+  text-align: left;
+  vertical-align: top;
+}
+
+th {
+  background: var(--wash);
+  color: var(--ink);
+  font-weight: 800;
+}
+
+table p {
+  margin: 0;
+}
+
+* {
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
