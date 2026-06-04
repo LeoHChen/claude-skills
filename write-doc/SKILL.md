@@ -57,7 +57,7 @@ as a PDF, follow this pattern.
 | **berry** | Elegant, formal | Fraunces (serif) | `#6D2E46` |
 | **lab** | Modern, minimal, design-y | Space Grotesk | `#FF2D6B` |
 | **cv** | Dense, resume/CV-ready | Inter | `#1F4D78` |
-| **cv-modern** | Polished executive CV | Space Grotesk + Inter | `#0E7C7B` + `#C17A18` |
+| **cv-modern** | Polished executive CV | Space Grotesk + Inter | `#2563A8` + `#C17A18` |
 
 All themes use a light page (white or cream) for print readability.
 Carbon uses a dark code block as the only dark element — keeps the
@@ -65,7 +65,7 @@ Carbon uses a dark code block as the only dark element — keeps the
 CV uses tighter margins, spacing, and type scale so resume-style Markdown
 can usually fit into one or two pages without switching tools.
 CV Modern keeps the same resume density but adds a stronger header,
-subtle contact band, teal section hierarchy, and amber highlight accent
+subtle contact band, blue section hierarchy, and amber highlight accent
 for a more contemporary executive document.
 
 **Never default to a deep-blue theme** — the user has explicitly

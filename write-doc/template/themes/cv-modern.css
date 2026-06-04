@@ -6,10 +6,10 @@
   --muted: #53606C;
   --quiet: #EEF2F5;
   --line: #D7DEE5;
-  --teal: #0E7C7B;
+  --blue: #2563A8;
   --amber: #C17A18;
   --paper: #FFFFFF;
-  --wash: #F7FAFA;
+  --wash: #F7FAFC;
 }
 
 @page { size: Letter; margin: 0.52in 0.62in 0.58in; }
@@ -32,7 +32,7 @@ h1::before {
   display: block;
   height: 5pt;
   margin: 0 0 5pt;
-  background: linear-gradient(90deg, var(--teal) 0 72%, var(--amber) 72% 100%);
+  background: linear-gradient(90deg, var(--blue) 0 72%, var(--amber) 72% 100%);
 }
 
 h1 {
@@ -71,7 +71,7 @@ h2 {
   margin: 10pt 0 4pt;
   padding: 0 0 2pt;
   border-bottom: 1px solid var(--line);
-  color: var(--teal);
+  color: var(--blue);
   font-family: "Space Grotesk", "Inter", system-ui, sans-serif;
   font-size: 12.8pt;
   font-weight: 700;
@@ -105,7 +105,7 @@ li {
 }
 
 li::marker {
-  color: var(--teal);
+  color: var(--blue);
 }
 
 strong {
@@ -119,7 +119,7 @@ em {
 }
 
 a {
-  color: var(--teal);
+  color: var(--blue);
   text-decoration: none;
 }
 
