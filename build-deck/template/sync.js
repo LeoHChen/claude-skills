@@ -24,6 +24,6 @@ if (!re.test(html)) {
   process.exit(1);
 }
 
-html = html.replace(re, `$1\n${content}\n$2`);
+html = html.replace(re, (m, p1, p2) => p1 + "\n" + content + "\n" + p2);
 fs.writeFileSync(htmlPath, html);
 console.log(`Synced content.md (${content.length} chars) → index.html`);
