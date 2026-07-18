@@ -1,6 +1,6 @@
 ---
 name: build-deck
-description: Build a slide deck using the user's standard pattern — content lives in content.md (YAML stream), rendering is a themed website with a dual-mode (Review / Present) renderer, 8 themes (Terracotta, Carbon, Berry, Lab, Mono, Aurora, Brutalist, Dusk), keyboard nav in Present mode, top progress hairline, on-slide page numbers. Use when the user asks to build, design, draft, or revise a slide deck or presentation in any project. Each deck lives in its own subfolder with content.md, index.html, and sync.js. Avoid PowerPoint/PPTX unless the user explicitly asks.
+description: Build a slide deck using the user's standard pattern — content lives in content.md (YAML stream), rendering is a themed website with a dual-mode (Review / Present) renderer, keyboard nav in Present mode, top progress hairline, on-slide page numbers. Two templates: `template/` (generic, 8 themes) and `template-besharp/` (teal/amber serif pitch-deck design system with its own slide types). Use when the user asks to build, design, draft, or revise a slide deck or presentation in any project. Each deck lives in its own subfolder with content.md, index.html, and sync.js. Avoid PowerPoint/PPTX unless the user explicitly asks.
 ---
 
 # Build a Deck (User's Standard Pattern)
@@ -22,6 +22,30 @@ Each deck is one self-contained subfolder:
 ```
 
 Template files live at `~/.claude/skills/build-deck/template/`. Copy them into the new deck folder and edit `content.md`.
+
+## Choosing a template
+
+Two templates ship with this skill. Both use the identical content.md → sync.js → index.html workflow; they differ in design system and slide vocabulary.
+
+- **`template/`** — the generic renderer: 8 switchable themes, abstract slide types (`title`, `cards`, `flow`, `architecture`, `roadmap`, `proscons`, `questions`). Default for internal docs, strategy decks, and anything theme-flexible.
+- **`template-besharp/`** — a polished teal/amber serif pitch-deck design system. Fixed palette (deep teal `#0E4A5A` / amber `#E9A13B` / seafoam `#F2F7F8`), serif display (Fraunces standing in for Cambria), dark-teal bookend slides sandwiching light content, Font Awesome icon circles, and layout-specific slide types. **Use it for investor and pitch decks, or whenever the user asks for this teal/amber pitch-deck look.** Slides are a fixed 1280×720 canvas (= 13.333in × 7.5in at 96dpi), so PDF export is print-exact 16:9 with no scaling.
+
+### template-besharp slide types
+
+| type | renders | key fields |
+| --- | --- | --- |
+| `hero` | dark title slide: mark, two-tone serif title, tagline, rule, meta, team | `icon`, `title_parts[]` (`text`, `accent`), `tagline`, `meta`, `team` |
+| `stats-split` | left column of big stat callouts + right column of icon cards | `stats[]` (`value`, `label`), `cards[]` (`icon`, `title`, `body`) |
+| `columns` | 2–3 icon-circle columns with bullets or body; optional bold-emphasis lead | `lead` (supports `**bold**`), `items[]` (`icon`, `title`, `note`, `body` or `bullets[]`, `accent`) |
+| `tiers` | stacked dark tier cards (TAM/SAM/SOM) + pure-CSS bar chart | `tiers[]` (`value`, `title`, `body`, `shade: 1-3`), `chart` (`title`, `labels[]`, `values[]`, `caption`) |
+| `panels` | light panel → amber arrow → dark panel with layered items | `left` (`icon`, `title`, `note`, `bullets[]`), `right` (`icon`, `title`, `note`, `layers[]`, `footnote`) |
+| `score` | conic-gradient score ring + stacked explanation rows | `score`, `score_label`, `caption`, `rows[]` (`title`, `body`, `highlight`) |
+| `matrix` | competition table with ✓ / ◐ / — cells, highlighted row, callout box | `columns[]`, `rows[]` (`name`, `cells[]` of `full`/`partial`/`none`, `highlight`), `callout` (`label`, `text`) |
+| `loop` | left stacked blocks + 4-node flywheel with amber arrows and hub | `blocks[]` (`title`, `body`), `flywheel` (`title`, `nodes[]` with `text`, `shade`) |
+| `people` | 3-up team cards with initial circles | `people[]` (`initial`, `name`, `role`, `bullets[]`, `accent`) |
+| `close` | dark closing/ask slide: cards, milestones line, brand footer | `cards[]` (`icon`, `title`, `body`), `milestones` (`label`, `items[]`), `brand` (`parts[]`, `text`) |
+
+Every type also accepts `kicker` (amber uppercase eyebrow), `title`, `subtitle`, and `sources` (small muted footer line). `hero` and `close` render dark automatically; any other slide can force it with `variant: dark`. Icons are Font Awesome 6 solid names (`fa-house`, `fa-brain`, …). The template's `content.md` is a complete placeholder deck covering every type — replace its fields with your own.
 
 ## content.md format
 
