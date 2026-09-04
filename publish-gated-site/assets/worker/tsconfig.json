@@ -1,0 +1,16 @@
+{
+  // The Worker runs on workerd, not in a browser and not in Node, so it needs
+  // its own lib and types. Keep the site's own tsconfig (if any) from including
+  // this folder — mixing DOM and Workers globals produces confusing errors.
+  "compilerOptions": {
+    "lib": ["ES2022"],
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "target": "ES2022",
+    "types": ["@cloudflare/workers-types"],
+    "strict": true,
+    "noEmit": true,
+    "skipLibCheck": true
+  },
+  "include": ["**/*.ts"]
+}

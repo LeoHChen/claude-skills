@@ -1,0 +1,15 @@
+# Copy to .dev.vars for local OAuth testing (`.dev.vars` is gitignored).
+#
+# In production these are Cloudflare Worker secrets, not files:
+#   npx wrangler secret put GITHUB_APP_CLIENT_ID
+#   npx wrangler secret put GITHUB_APP_CLIENT_SECRET
+#   npx wrangler secret put SESSION_SECRET
+#
+# Without them a deployed Worker serves 503 and shows nothing — fail-closed by
+# design. Localhost bypasses the gate when they are absent, so ordinary layout
+# work needs no credentials at all (`npm run preview:worker`).
+GITHUB_APP_CLIENT_ID="replace-with-github-app-client-id"
+GITHUB_APP_CLIENT_SECRET="replace-with-github-app-client-secret"
+GITHUB_REPOSITORY="__GITHUB_REPOSITORY__"
+SESSION_SECRET="replace-with-at-least-32-random-characters"
+SITE_ORIGIN="http://localhost:8787"

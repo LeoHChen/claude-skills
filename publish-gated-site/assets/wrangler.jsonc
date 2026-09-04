@@ -1,0 +1,40 @@
+{
+  // The site is served as static assets, but it is not public — `worker/index.ts`
+  // puts a GitHub sign-in gate in front of it. Nothing is served without a
+  // session.
+  //
+  // Deploys happen on a published GitHub release: the release workflow moves
+  // the `release` branch, and Cloudflare Workers Builds builds and deploys from
+  // it. See DEPLOYMENT.md. `npm run deploy` stays as the emergency path from a
+  // laptop with an interactive `npx wrangler login` done. Either way the gate
+  // needs the three secrets listed in `.dev.vars.example` set with
+  // `wrangler secret put` — they live in Cloudflare, never in GitHub.
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "__WORKER_NAME__",
+  "main": "worker/index.ts",
+  "compatibility_date": "__COMPAT_DATE__",
+  "observability": { "enabled": true },
+  // The Custom Domain is the only origin. Keep the account-level workers.dev
+  // route and per-version preview URLs disabled so a future deployment cannot
+  // silently restore an infrastructure hostname that bypasses the domain.
+  "workers_dev": false,
+  "preview_urls": false,
+  "routes": [
+    {
+      "pattern": "__DOMAIN__",
+      "custom_domain": true
+    }
+  ],
+  "assets": {
+    "directory": "./__ASSETS_DIR__",
+    // The Worker reaches the built files through this binding once a request
+    // has a valid session.
+    "binding": "ASSETS",
+    // /about and /about/ both resolve to about/index.html (or about.html).
+    "html_handling": "auto-trailing-slash",
+    // Without this, Cloudflare answers for any path that matches a built file
+    // before the Worker ever runs — which would serve the whole site straight
+    // past the gate. Every request goes to the Worker.
+    "run_worker_first": true
+  }
+}
