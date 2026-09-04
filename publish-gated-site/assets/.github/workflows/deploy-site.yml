@@ -19,7 +19,6 @@ name: Deploy site
 on:
   release:
     types: [published]
-  workflow_dispatch:
 
 permissions:
   contents: write
@@ -40,7 +39,15 @@ jobs:
       # fast-forward with "fetch first".
       - uses: actions/checkout@v5
         with:
+          ref: ${{ github.event.release.tag_name }}
           fetch-depth: 0
+
+      - name: Verify the released tag
+        env:
+          RELEASE_TAG: ${{ github.event.release.tag_name }}
+        run: |
+          test -n "$RELEASE_TAG"
+          test "$(git rev-parse HEAD)" = "$(git rev-parse "refs/tags/${RELEASE_TAG}^{commit}")"
 
       - uses: actions/setup-node@v5
         with:
@@ -79,7 +86,7 @@ jobs:
           {
             echo "### \`release\` → \`${GITHUB_SHA::7}\`"
             echo ""
-            echo "- Release: \`${{ github.event.release.tag_name || github.ref_name }}\`"
+            echo "- Release: \`${{ github.event.release.tag_name }}\`"
             echo "- Cloudflare Workers Builds deploys from \`release\`; watch the Worker's Builds tab."
             echo "- https://__DOMAIN__/"
           } >> "$GITHUB_STEP_SUMMARY"

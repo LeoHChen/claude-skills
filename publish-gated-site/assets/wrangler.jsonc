@@ -5,8 +5,8 @@
   //
   // Deploys happen on a published GitHub release: the release workflow moves
   // the `release` branch, and Cloudflare Workers Builds builds and deploys from
-  // it. See DEPLOYMENT.md. `npm run deploy` stays as the emergency path from a
-  // laptop with an interactive `npx wrangler login` done. Either way the gate
+  // it. See DEPLOYMENT.md. `npm run bootstrap:worker` is only for the initial,
+  // fail-closed Worker and custom-domain setup before any secret exists. The gate
   // needs the three secrets listed in `.dev.vars.example` set with
   // `wrangler secret put` — they live in Cloudflare, never in GitHub.
   "$schema": "node_modules/wrangler/config-schema.json",

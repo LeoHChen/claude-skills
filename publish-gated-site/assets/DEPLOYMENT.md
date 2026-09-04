@@ -21,8 +21,8 @@ gh release create v1.0.0 -R __GITHUB_REPOSITORY__ --title "v1.0.0" --notes "What
 
 The promotion push is fast-forward only. A release that is not ahead of
 `release` fails instead of rewinding; roll back by cutting a forward release.
-Never commit to `release` directly. `workflow_dispatch` re-runs the promotion
-by hand.
+Never commit or push to `release` directly. Only the published-release workflow
+may create or advance it.
 
 Only `__ASSETS_DIR__/` is served. Whatever produces it is the build; the rest
 of the repo never reaches the URL.
@@ -44,13 +44,22 @@ It needs a GitHub App of its own (account or org settings → Developer settings
   metadata read); nothing else
 - **Install on:** only `__GITHUB_REPOSITORY__`
 
-Then set three Worker secrets from this repo — never commit them:
+Only after the first release-backed Cloudflare build has succeeded, set three
+Worker secrets from this repo. Never commit them or expose their values in
+logs or shell history:
 
 ```sh
 npx wrangler secret put GITHUB_APP_CLIENT_ID
 npx wrangler secret put GITHUB_APP_CLIENT_SECRET
-npx wrangler secret put SESSION_SECRET      # 32+ random characters, e.g. openssl rand -base64 48
+openssl rand -base64 48 | npx wrangler secret put SESSION_SECRET
+npx wrangler secret list
 ```
+
+The final command must list `GITHUB_APP_CLIENT_ID`,
+`GITHUB_APP_CLIENT_SECRET`, and `SESSION_SECRET`. If it does not, the setup is
+incomplete. Opening the App installation URL directly may show "Sign-in
+expired" because there is no OAuth state cookie; start a real sign-in at
+`https://__DOMAIN__/auth/login`.
 
 **It fails closed.** Until the secrets exist, the deployed Worker serves a 503
 "Configuration required" page and nothing else. That is the intended state
@@ -64,7 +73,10 @@ make the Custom Domain the only origin. Do not weaken them, and keep
 "builds for non-production branches" **off** in Workers Builds — a preview
 deployment would hand the site an infrastructure hostname.
 
-## Emergency path
+## One-time infrastructure bootstrap
 
-`npm run deploy` from a laptop with `npx wrangler login` done builds and
-deploys directly. It bypasses the release record, so prefer a release.
+Before the first release, `npm run bootstrap:worker` from a laptop with
+`npx wrangler login` creates the Worker and custom-domain binding while missing
+secrets keep every public request fail-closed with a 503. Once the gate is
+configured, do not use it to publish content; every publication must come from
+a tagged GitHub release.

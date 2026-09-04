@@ -1,6 +1,6 @@
 ---
 name: publish-gated-site
-description: Use when the user wants to publish, host or deploy a website that lives in a private GitHub repo to a custom domain, gated behind a login (GitHub sign-in today; other gates later), with deploys triggered only by a published GitHub release — never on push. Scaffolds the GitHub Action, the Cloudflare Worker gate, wrangler config, a redirect test and docs; wires Cloudflare Workers Builds; hands the credential steps to the human. Asks for the domain name.
+description: Use when the user wants to publish, host or deploy a website that lives in a private GitHub repo to a custom domain, gated behind a login (GitHub sign-in today; other gates later), with deploys triggered only by a published GitHub release — never on push or manual dispatch. Scaffolds and verifies the GitHub Action, Cloudflare Worker gate, wrangler config, redirect tests, documentation, Workers Builds, GitHub App and secrets. Asks for the domain name.
 ---
 
 # Publish a Gated Site (release-only)
@@ -11,17 +11,20 @@ release — rather than a side effect of every push.
 
 ## Core rules
 
-- **Release publishes; push never does.** The workflow triggers on
-  `release: [published]` (plus manual dispatch). Do not add a `push` trigger,
+- **Only a published release publishes.** The workflow triggers on
+  `release: [published]`. Do not add `push` or `workflow_dispatch`,
   even if asked to "make it deploy automatically" — a release *is* the
   automation, and it is what keeps investors, customers or co-founders from
   seeing a half-edited page.
 - **No hosting credential in GitHub.** Cloudflare Workers Builds clones the
   repo with Cloudflare's own GitHub App and deploys under a Cloudflare-managed
   build token. The Action only moves a branch pointer.
-- **Secrets never pass through you.** The gate needs a GitHub App client
-  secret and a session secret. Registering the app and running
-  `wrangler secret put` are the human's steps; you print exact instructions.
+- **Handle credentials safely.** When authenticated browser and CLI access are
+  available, configure the dedicated GitHub App and Worker secrets yourself,
+  with user confirmation immediately before creating persistent OAuth
+  credentials or expanding repository access. Never print, log, commit, or put
+  secret values in shell history. If that access is unavailable, give the
+  human the exact handoff and report the setup as incomplete—not successful.
 - **Fail closed.** Until the secrets exist the deployed Worker serves a 503
   page, not the site. That is the intended interim state, not a bug.
 - **Single origin, total gate.** `workers_dev: false`, `preview_urls: false`
@@ -69,16 +72,22 @@ If the user gave the domain in their request, do not ask again.
    (if the repo has a build CI), release publishes.
 4. **Commit and push** per the repo's rules. Trunk-direct repos: commit to
    `main`, confirming first if the guide asks. PR repos: branch, PR, wait.
-5. **First deploy from a laptop** that has done `npx wrangler login`:
-   `npm run deploy`. This creates the Worker and binds the custom domain
-   (wrangler creates the DNS record). Verify the 503 page comes back on `/`,
-   on an asset path, and on a path that should not exist; confirm
-   `<worker>.<account>.workers.dev` does **not** serve.
+5. **Bootstrap the Worker while it is fail-closed** from a laptop that has
+   done `npx wrangler login`: `npm run bootstrap:worker`. This one-time step
+   creates the Worker and binds the custom domain, but the missing gate secrets
+   keep every public path on the 503 configuration page. Verify `/`, an asset
+   path, and a path that should not exist all fail closed; confirm
+   `<worker>.<account>.workers.dev` does **not** serve. Never use this command
+   as an alternate publishing path after the gate is configured.
    *Your machine's resolver may have cached NXDOMAIN for the new hostname from
    an earlier lookup — use `curl --resolve host:443:<cf-ip>` to bypass it.*
-6. **Release pointer + Workers Builds.**
-   `git push origin main:refs/heads/release` (never commit to it afterwards),
-   then in the Cloudflare dashboard: Worker → Settings → Builds → Connect —
+6. **Publish the first tagged GitHub release.** Follow the repo's existing tag
+   convention (check `gh release list`; do not invent `v0.1.0` next to an
+   existing `v0.7`). The release workflow—not a manual branch push—creates or
+   fast-forwards `release` to the exact tagged commit. Never commit or push to
+   `release` directly.
+7. **Connect Cloudflare Workers Builds** in the Cloudflare dashboard: Worker →
+   Settings → Builds → Connect —
    repo, production branch `release`, **non-production builds off**, root `/`
    (or the site's subdirectory), build command, `npx wrangler deploy`,
    `NODE_VERSION=22`, API token **Create new token** (one per Worker, so
@@ -87,17 +96,23 @@ If the user gave the domain in their request, do not ask again.
    interact through element refs, not screenshots. Cloudflare's GitHub App
    must have access to the repo; expanding its scope is a permission change
    the user confirms.
-7. **Hand off the credentials** — exact settings are in the generated
-   `DEPLOYMENT.md`: register a GitHub App (homepage + `/auth/callback` on the
-   domain, *Request user authorization during installation* on, Contents
-   read-only, installed on that one repo), then three `wrangler secret put`
-   calls. The gate flips from 503 to sign-in the moment the third secret
-   lands; no redeploy.
-8. **First release.** Follow the repo's existing tag convention if it has one
-   (check `gh release list` — do not invent `v0.1.0` next to an existing
-   `v0.7`). Watch the Action go green and the Worker's Builds tab deploy, then
-   verify: `/` → sign-in redirect, an asset → 401 without a session,
-   workers.dev → 404, push to `main` → no build.
+   Wait for the build from `release` to succeed while the gate still returns
+   503. This ordering ensures the first content that can become visible is the
+   released content.
+8. **Configure the gate.** Exact settings are in the generated
+   `DEPLOYMENT.md`: register a dedicated GitHub App (homepage +
+   `/auth/callback` on the domain, *Request user authorization during
+   installation* on, Contents read-only, installed on that one repo), then set
+   the three Worker secrets without exposing their values. Use authenticated
+   browser/CLI access yourself when available; otherwise hand off these exact
+   steps and stop with setup incomplete. Run `npx wrangler secret list` and
+   require all three names before proceeding. The third secret flips the
+   already release-backed deployment from 503 to sign-in; no redeploy.
+9. **Verify end to end:** `/` → sign-in redirect, an asset → 401 without a
+   session, authorized GitHub login → every intended route loads, workers.dev
+   → unavailable, and a push to `main` → no Cloudflare build. Opening the App
+   installation URL can initially show "Sign-in expired" because it has no
+   OAuth state cookie; begin the real sign-in at `/auth/login`.
 
 ## Other gates
 
@@ -131,6 +146,9 @@ Add a gate to the scaffold only after it has been built by hand once.
   `--compat-date` when wrangler is upgraded.
 - Copies of the gate exist across repos. A bug fixed in one is fixed in all —
   and in this skill's `assets/worker/index.ts`.
+
+The rationale and setup-order failure modes are recorded in
+[`docs/2026-09-04-design.md`](docs/2026-09-04-design.md).
 
 ## When not to use
 

@@ -31,8 +31,8 @@ Options:
   --force                Overwrite files the scaffold owns if they already exist.
   -h, --help
 
-Never handles a secret. Prints the human steps (GitHub App, wrangler secret
-put, Workers Builds connection, first release) at the end.
+Never prints or stores a secret. Prints the remaining setup and verification
+steps at the end.
 
 Example:
   scaffold-gated-site.sh --domain deck.example.com --allowlist "index.html,assets,robots.txt"
@@ -158,7 +158,9 @@ const scripts = {
   // wrangler dev rewrites the request host to the custom domain, which defeats
   // the gate's localhost bypass; pin the host so the preview stays ungated.
   'preview:worker': 'npm run build --if-present && wrangler dev --host localhost',
-  'deploy': 'npm run build --if-present && wrangler deploy',
+  // One-time infrastructure bootstrap while the missing gate secrets keep the
+  // public site fail-closed. Releases are the only publishing path afterwards.
+  'bootstrap:worker': 'npm run build --if-present && wrangler deploy',
 };
 if (buildCmd && !pkg.scripts.build) scripts.build = buildCmd;
 const added = [];
@@ -185,23 +187,28 @@ if [[ -n "$build_cmd" ]]; then add_ignore "${assets_dir%/}/"; fi
 
 cat <<NEXT
 
-Done. Verify, then the human steps — in this order:
+Done. Verify, then complete setup in this order:
 
   1. npm install && npm run typecheck && npm run test:worker && npm run build --if-present
      npm run preview:worker   # ungated on http://localhost:8787 — check the site and a 404 path
   2. Commit. Push main (if this repo asks you to confirm before pushing, ask).
-  3. First deploy from a laptop with \`npx wrangler login\` done:
-       npm run deploy
-     Creates the Worker '$worker_name' and binds $domain. It serves a 503
-     "Configuration required" page until step 5 — that is the fail-closed design.
-  4. Create the release pointer and connect Cloudflare Workers Builds:
-       git push origin main:refs/heads/release
+  3. One-time fail-closed infrastructure bootstrap from a laptop with
+     \`npx wrangler login\` done:
+       npm run bootstrap:worker
+     This creates the Worker '$worker_name' and binds $domain. With no gate
+     secrets set, every public path serves "Configuration required" (503).
+  4. Publish a tagged GitHub release. Its workflow alone creates or advances
+     the 'release' branch to the exact tagged commit. Never push that branch manually.
+  5. Connect Cloudflare Workers Builds:
      Cloudflare dashboard → Workers & Pages → $worker_name → Settings → Builds → Connect:
        repo $repo · production branch: release · builds for non-production branches: OFF
        root: / · build: npm run build (or blank) · deploy: npx wrangler deploy
        build variable NODE_VERSION=22 · API token: Create new token
      Cloudflare's GitHub App must be able to see $repo (installation → repository access).
-  5. Register the gate's GitHub App and set the secrets — see DEPLOYMENT.md § The gate.
-     The gate flips from 503 to sign-in the moment the third secret lands.
-  6. Publish a GitHub release. The workflow promotes 'release'; Cloudflare builds and deploys.
+     Wait for the release-backed build to succeed while the site still returns 503.
+  6. Register the dedicated GitHub App and set all three Worker secrets securely —
+     see DEPLOYMENT.md § The gate. Verify with \`npx wrangler secret list\`.
+     The site flips from 503 to sign-in only after released content is deployed.
+  7. Verify sign-out, authorized sign-in, every intended route, disabled workers.dev,
+     and that a push to main produces no Cloudflare deployment.
 NEXT
