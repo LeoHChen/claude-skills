@@ -13,6 +13,18 @@ the `Skill` tool when working with Claude Code.
 | [`weekly-all-hands`](weekly-all-hands/) | Creates and updates Poseidon weekly all-hands transcript imports, meeting notes, TL;DR sections, and next-week carry-forward agendas after a Granola transcript is posted. Includes a scaffold script for the standard `tpm-agent` meeting files. |
 | [`write-doc`](write-doc/) | Write a Markdown document and render it to themed HTML and PDF via `make sync DOC=<name> [THEME=<theme>]` and `make pdf DOC=<name> [THEME=<theme>]`. Themes: Terracotta, Carbon, Berry, Lab, CV — tuned for print. Pandoc + headless Chromium pipeline (no LaTeX). |
 | [`nano-banana`](nano-banana/) | Generate or edit images via Google's Gemini "Nano Banana" image-model family. Stdlib-only Python CLI; defaults to `gemini-3.1-flash-image-preview`, with Pro tier via `--model nano-banana-pro-preview` and stable fallback `gemini-2.5-flash-image`. Supports text-to-image, image edit, and multi-reference composition (repeat `--input`). Requires `GEMINI_API_KEY`. |
+| [`publish-gated-site`](publish-gated-site/) | Publish a website from a **private GitHub repo** to a custom domain on a Cloudflare Worker, **gated behind GitHub sign-in** (other gates later), deployed **only when a GitHub release is published** — never on push or manual dispatch. Scaffolds and verifies the release workflow, fail-closed Worker gate, secure first-publication sequence, optional static allowlist builder, Cloudflare Workers Builds, dedicated GitHub App and secrets. Asks for the domain name. |
+
+## What's new in v1.6.0
+
+**`publish-gated-site`** — new skill: release-only publishing of a private repo's site behind a login gate.
+
+- One scaffold script (`scripts/scaffold-gated-site.sh --domain <host>`) writes the GitHub Action, the Cloudflare Worker gate, `wrangler.jsonc`, a redirect test, `.dev.vars.example`, `DEPLOYMENT.md` and (for static repos) an allowlist builder; merges `package.json` scripts and devDependencies; extends `.gitignore`. It never prints or stores a secret.
+- Publishing a GitHub release fast-forwards a `release` branch; Cloudflare Workers Builds deploys from it with its own GitHub App. Push to `main` deploys nothing, and nothing in GitHub can talk to Cloudflare.
+- Encodes the bugs hit while doing this by hand three times: shallow-checkout fast-forward failures, `wrangler dev` rewriting the host, `"type": "module"` breaking CommonJS scripts, the invisible connect dialog, future compatibility dates.
+- `github` gate implemented; `cloudflare-access` and `none` documented as extension points.
+
+Design notes in [`publish-gated-site/docs/`](publish-gated-site/docs/). Issue #26.
 
 ## What's new in v1.5.0
 

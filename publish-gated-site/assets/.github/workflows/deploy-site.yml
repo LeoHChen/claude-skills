@@ -1,0 +1,92 @@
+name: Deploy site
+
+# Publishing a GitHub release moves the `release` branch to the released commit.
+# Cloudflare Workers Builds watches that branch and builds + deploys the site
+# from it using Cloudflare's own GitHub App — so no Cloudflare credential lives
+# in this repo, and nothing here talks to Cloudflare at all. A push to `main`
+# deploys nothing.
+#
+# `release` is a pointer, not a branch anyone commits to. The promotion push is
+# fast-forward only: dispatching this on a tag that is not ahead of `release`
+# FAILS with a clear message instead of rewinding. To roll back, cut a forward
+# release from a revert commit — or, if force-pushing is acceptable in this
+# repo, change the push below to `git push --force`.
+#
+# The Worker's secrets (GITHUB_APP_CLIENT_ID, GITHUB_APP_CLIENT_SECRET,
+# SESSION_SECRET) live in Cloudflare; `wrangler deploy` leaves them untouched.
+# Never add them, or a Cloudflare API token, to GitHub.
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: deploy-site
+  cancel-in-progress: false
+
+jobs:
+  promote:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      # A release checks out the tagged commit, so what ships is exactly what
+      # was released. fetch-depth: 0 is required: git cannot prove the new
+      # commit descends from `release` out of a shallow clone and rejects the
+      # fast-forward with "fetch first".
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ github.event.release.tag_name }}
+          fetch-depth: 0
+
+      - name: Verify the released tag
+        env:
+          RELEASE_TAG: ${{ github.event.release.tag_name }}
+        run: |
+          test -n "$RELEASE_TAG"
+          test "$(git rev-parse HEAD)" = "$(git rev-parse "refs/tags/${RELEASE_TAG}^{commit}")"
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+          cache: npm
+
+      - name: Install
+        run: npm ci
+
+      # Nothing else compiles worker/index.ts — wrangler only bundles it — so
+      # typecheck is the only thing that checks the gate.
+      - name: Typecheck the Worker
+        run: npm run typecheck
+
+      - name: Test the gate's return-to handling
+        run: npm run test:worker
+
+      # Same command Cloudflare will run. Proves the released commit builds
+      # before the branch Cloudflare deploys from is allowed to move.
+      - name: Build
+        run: npm run build --if-present
+
+      - name: Point `release` at this commit
+        run: |
+          if git rev-parse --verify -q origin/release >/dev/null &&
+             ! git merge-base --is-ancestor origin/release "${GITHUB_SHA}"; then
+            echo "::error::${GITHUB_SHA} is not ahead of origin/release." \
+                 "This workflow pushes fast-forward only." \
+                 "To roll back, cut a forward release from a revert commit."
+            exit 1
+          fi
+          git push origin "${GITHUB_SHA}:refs/heads/release"
+
+      - name: Summary
+        run: |
+          {
+            echo "### \`release\` → \`${GITHUB_SHA::7}\`"
+            echo ""
+            echo "- Release: \`${{ github.event.release.tag_name }}\`"
+            echo "- Cloudflare Workers Builds deploys from \`release\`; watch the Worker's Builds tab."
+            echo "- https://__DOMAIN__/"
+          } >> "$GITHUB_STEP_SUMMARY"
